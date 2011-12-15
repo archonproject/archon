@@ -1769,7 +1769,8 @@ abstract class Core_Archon
          $date = date('Y-m-d');
 
          $result = $this->mdb2->query("SELECT LastUpdated,VersionNumber FROM tblCore_VersionCache WHERE VersionName = 'Version';");
-         if($result->numRows())
+         
+         if(!PEAR::isError($result) && $result->numRows())
          {
             $row = $result->fetchRow();
             if($date > $row['LastUpdated'])
@@ -1802,18 +1803,15 @@ abstract class Core_Archon
 
             $query = "INSERT INTO tblCore_VersionCache (VersionName, VersionNumber, LastUpdated) VALUES (?, ?, ?)";
             $prep = $this->mdb2->prepare($query, array('text', 'text', 'date'), MDB2_PREPARE_MANIP);
-            if(PEAR::isError($prep))
+            if(!PEAR::isError($prep))
             {
-               trigger_error($prep->getMessage(), E_USER_ERROR);
+               $affected = $prep->execute(array('Version', $version, $date));
+               if(PEAR::isError($affected))
+               {
+                  trigger_error($affected->getMessage(), E_USER_ERROR);
+               }
+               $prep->free();
             }
-
-            $affected = $prep->execute(array('Version', $version, $date));
-            if(PEAR::isError($affected))
-            {
-               trigger_error($affected->getMessage(), E_USER_ERROR);
-            }
-
-            $prep->free();
          }
 
          return $version;
