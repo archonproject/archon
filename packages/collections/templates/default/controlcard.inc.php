@@ -52,7 +52,7 @@ echo("<h1 id='titleheader'>" . $_ARCHON->PublicInterface->Title . "</h1>\n");
       if($objCollection->Extent)
       {
          ?>
-         <div class='ccardcontent'><span class='ccardlabel'>Extent:</span> <?php echo(preg_replace('/\.(\d)0/', ".$1", $objCollection->getString('Extent'))) . " " . is_null($objCollection->ExtentUnit)? '' : $objCollection->ExtentUnit->toString(); ?>
+         <div class='ccardcontent'><span class='ccardlabel'>Extent:</span> <?php echo(preg_replace('/\.(\d)0/', ".$1", $objCollection->getString('Extent'))) . " "; ?><?php echo( is_null($objCollection->ExtentUnit)? '' : $objCollection->ExtentUnit->toString()); ?>
          </div>
    <?php
 }
