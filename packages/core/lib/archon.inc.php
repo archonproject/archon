@@ -3482,7 +3482,7 @@ abstract class Core_Archon
       if($RepositoryID)
       {
          $repository = New Repository($RepositoryID);
-         $repsository->dbLoad();
+         $repository->dbLoad();
       }
       else
       {
