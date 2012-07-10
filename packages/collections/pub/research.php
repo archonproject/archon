@@ -539,11 +539,17 @@ function research_exec()
    elseif($_REQUEST['f'] == 'sendemails')
    {
       $arrDetails = $_ARCHON->Security->Session->ResearchCart->getCartDetailsArray();
-      foreach($arrDetails as $RepositoryID => $details)
+      if(!empty($arrDetails))
       {
-         $_ARCHON->sendEmail($_REQUEST['fromaddress'], $_REQUEST['message'], $_REQUEST['referer'], $_REQUEST['fromname'], $_REQUEST['subject'], $_REQUEST['fromphone'], $_REQUEST['details'] . '\n\n' . $details, $_REQUEST['detailsfunction'], $_REQUEST['detailsparams'], $RepositoryID);
+      	foreach($arrDetails as $RepositoryID => $details)
+      	{
+         	$_ARCHON->sendEmail($_REQUEST['fromaddress'], $_REQUEST['message'], $_REQUEST['referer'], $_REQUEST['fromname'], $_REQUEST['subject'], $_REQUEST['fromphone'], $_REQUEST['details'] . '\n\n' . $details, $_REQUEST['detailsfunction'], $_REQUEST['detailsparams'], $RepositoryID);
+      	}
       }
-
+      else
+      {
+      $_ARCHON->sendEmail($_REQUEST['fromaddress'], $_REQUEST['message'], $_REQUEST['referer'], $_REQUEST['fromname'], $_REQUEST['subject'], $_REQUEST['fromphone'], $_REQUEST['details'], $_REQUEST['detailsfunction'], $_REQUEST['detailsparams']);
+      }
       if(!$_ARCHON->Error)
       {
          $msg = "Thank you! Your e-mail has been sent.";
