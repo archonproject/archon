@@ -9,7 +9,7 @@
  * is an instance of a DigitalContent object, with its properties
  * already loaded when this template is referenced.
  *
- * Refer to the DigitalContent class definition in packages/digitallibrary/lib/digitallibrary.inc.php
+ * Refer to the DigitalContent class definition in packages/digitallibrary/lib/digitalcontent.inc.php
  * for available properties and methods.
  *
  * The Archon API is also available through the variable:
