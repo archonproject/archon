@@ -4,6 +4,7 @@ $TemplateIndex['Email'] = 'email.inc.php';
 $TemplateIndex['Register'] = 'register.inc.php';
 $TemplateIndex['Login'] = 'login.inc.php';
 $TemplateIndex['EditProfile'] = 'edit-profile.inc.php';
+$TemplateIndex['Repositorylist'] = 'repository-list.inc.php';
 $TemplateIndex['SearchTitle'] = 'search-title.inc.php';
 
 // Form sub-templates
