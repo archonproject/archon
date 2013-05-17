@@ -148,6 +148,12 @@ abstract class Subjects_Archon
    {
       $arrSubjects = $this->loadTable("tblSubjects_Subjects", "Subject", "Subject");
 
+	  foreach($arrSubjects as &$objSubject)
+	  
+	  {
+	  $objSubject->dbLoadSubjectSource();
+	  }
+
       if($MakeIntoIndex)
       {
          foreach($arrSubjects as $objSubject)

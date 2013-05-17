@@ -212,6 +212,55 @@ abstract class Subjects_Subject
    }
 
    /**
+    * Loads SubjectSource for Subject from the database
+    *
+    * @return boolean
+    */
+   public function dbLoadSubjectSource()
+   {
+      global $_ARCHON;
+
+      if(!$this->ID)
+      {
+         $_ARCHON->declareError("Could not load SubjectSource: SubjectID not defined.");
+         return false;
+      }
+
+      if(!is_natural($this->ID))
+      {
+         $_ARCHON->declareError("Could not load SubjectSource: Subject ID must be numeric.");
+         return false;
+      }
+
+      $this->SubjectSources = array();
+
+      $query = "SELECT tblSubjects_SubjectSources . * FROM tblSubjects_SubjectSources JOIN tblSubjects_Subjects ON tblSubjects_Subjects.SubjectSourceID = tblSubjects_SubjectSources.ID WHERE tblSubjects_Subjects.ID = ? ";
+      $prep = $_ARCHON->mdb2->prepare($query, 'integer', MDB2_PREPARE_RESULT);
+      $result = $prep->execute($this->ID);
+
+      if(PEAR::isError($result))
+      {
+         trigger_error($result->getMessage(), E_USER_ERROR);
+      }
+
+      if(!$result->numRows())
+      {
+         return true;
+      }
+
+      while($row = $result->fetchRow())
+      {
+         $this->SubjectSources[$row['ID']] = New SubjectSource($row);
+      }
+
+      $result->free();
+      $prep->free();
+
+      return true;
+   }
+
+
+   /**
     * @var integer
     * */
    public $ID = 0;

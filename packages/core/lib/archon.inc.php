@@ -1564,6 +1564,7 @@ abstract class Core_Archon
       {
          $objUser->dbLoadUsergroups();
          $objUser->dbLoadPermissions();
+		 $objUser->dbLoadRepositories();
       }
 
       $arrUsers[-1] = New User(-1);
