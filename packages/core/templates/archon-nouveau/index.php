@@ -9,6 +9,11 @@ $TemplateIndex['Userlist'] = 'user-list.inc.php';
 $TemplateIndex['Subjectlist'] = 'subject-list.inc.php';
 $TemplateIndex['SubjectSourcelist'] = 'subjectsource-list.inc.php';
 $TemplateIndex['SubjectTypeslist'] = 'subjecttype-list.inc.php';
+$TemplateIndex['Enumlist'] = 'enum-list.inc.php';
+$TemplateIndex['Creatorslist'] = 'creators-list.inc.php';
+$TemplateIndex['Locationslist'] = 'locations-list.inc.php';
+$TemplateIndex['Classificationlist'] = 'classification-list.inc.php';
+$TemplateIndex['Collectionlist'] = 'collection-list.inc.php';
 $TemplateIndex['SearchTitle'] = 'search-title.inc.php';
 
 // Form sub-templates

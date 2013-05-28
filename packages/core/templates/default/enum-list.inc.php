@@ -21,59 +21,30 @@ $enumtype =$_REQUEST['enum_type'];
 
         switch ($enumtype) {
             case 'creatorsources';
-                echo json_encode($_ARCHON->getAllCreatorSources());
+                echo json_encode(array_values($_ARCHON->getAllCreatorSources()));
                 break;
             case 'extentunits';
-                   echo json_encode($_ARCHON->getAllExtentUnits());
+                   echo json_encode(array_values($_ARCHON->getAllExtentUnits()));
 
                 break;
             case 'filetypes';
-                echo json_encode($_ARCHON->getAllFileTypes());
+                echo json_encode(array_values($_ARCHON->getAllFileTypes()));
                 break;
             case 'materialtypes';
-                echo json_encode($_ARCHON->getAllMaterialTypes());
+                echo json_encode(array_values($_ARCHON->getAllMaterialTypes()));
                 break;
             case 'levelcontainers';
-                echo json_encode($_ARCHON->getAllLevelContainers());
+                echo json_encode(array_values($_ARCHON->getAllLevelContainers()));
                 break;
             case 'descriptiverules';
-                echo json_encode($_ARCHON->getAllDescriptiveRules());
+                echo json_encode(array_values($_ARCHON->getAllDescriptiveRules()));
                 break;
+
+            case 'creatorrelationship';
+                echo json_encode(array_values($_ARCHON->getAllCreatorRelationshipTypes()));
+                break;
+
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     } else {
         echo "Authentication Failed";

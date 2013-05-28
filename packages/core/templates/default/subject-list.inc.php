@@ -1,5 +1,5 @@
 <?php
-
+header('Content-Type: application/json');
 isset($_ARCHON) or die();
 
 //echo print_r($_REQUEST) ;

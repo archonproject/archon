@@ -2387,7 +2387,7 @@ abstract class Core_Archon
             }
             else if(!file_exists("packages/$Package/admin/$Script.php"))
             {
-                $this->declareError("Script $Script does not exist in Package $Package.");
+                $this->declareError("Script $Script does123 not exist in Package $Package.");
 
                 $arrP[0] = $arrDefaultPubP[0];
                 $arrP[1] = $arrDefaultPubP[1];
@@ -2416,7 +2416,7 @@ abstract class Core_Archon
             }
             else if(!file_exists("packages/$Package/pub/$Script.php"))
             {
-                $this->declareError("Script $Script does not exist in Package $Package.");
+                $this->declareError("Script $Script does77 not exist in Package $Package.");
 
                 $Package = $arrDefaultPubP[0];
                 $Script = $arrDefaultPubP[1];
