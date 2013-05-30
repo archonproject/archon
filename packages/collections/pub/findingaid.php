@@ -89,7 +89,7 @@ if(!$_ARCHON->Error)
       flush();
    }
 
-   if(!$_ARCHON->Security->userHasAdministrativeAccess())
+   if(!$_ARCHON->Security->userHasAdministrativeAccess() && $_REQUEST['disabletheme'] !== '1')
    {
       ?>
       <script type="text/javascript">
