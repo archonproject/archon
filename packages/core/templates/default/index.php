@@ -14,6 +14,8 @@ $TemplateIndex['Creatorslist'] = 'creators-list.inc.php';
 $TemplateIndex['Locationslist'] = 'locations-list.inc.php';
 $TemplateIndex['Classificationlist'] = 'classification-list.inc.php';
 $TemplateIndex['Collectionlist'] = 'collection-list.inc.php';
+$TemplateIndex['Accessionlist'] = 'accession-list.inc.php';
+$TemplateIndex['DigitalContentlist'] = 'digitalcontent-list.inc.php';
 $TemplateIndex['SearchTitle'] = 'search-title.inc.php';
 
 // Form sub-templates

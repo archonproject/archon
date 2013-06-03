@@ -21,9 +21,69 @@ if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
             //Handles the zero condition
             $start = ( $_REQUEST['batch_start'] < 1 ? 1: $_REQUEST['batch_start']);
 
-            // pulls Batches of 100 across
-            echo json_encode(array_slice($_ARCHON->getAllCollections(),$start-1,10));
 
+
+
+
+            // pulls Batches of 100 across
+
+
+
+
+
+            $arrCollectionbatch=(array_slice($_ARCHON->getAllCollections(),$start-1,10));
+
+            //Creators
+            $arrCollectionCreator = getCollectioncreators();
+
+            foreach ($arrCollectionCreator as $CollectionRelatedObject)
+            {
+                if(array_key_exists($CollectionRelatedObject['CollectionID'],$arrCollectionbatch)){
+                    $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->Creators[] = $CollectionRelatedObject['CreatorID'];
+                   // $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->HERE = '****C****';
+                }
+            }
+            //Creators
+            //Subjects
+
+            $arrCollectionSubjects= getCollectionSubjects();
+
+            foreach ($arrCollectionSubjects as $CollectionRelatedObject)
+            {
+                if(array_key_exists($CollectionRelatedObject['CollectionID'],$arrCollectionbatch)){
+                    $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->Subjects[] = $CollectionRelatedObject['SubjectID'];
+                   // $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->HERE = '****S****';
+                }
+            }
+            //Subjects
+            //Locations
+
+            $arrCollectionlocations = getCollectionlocations();
+
+            foreach ($arrCollectionlocations as $CollectionRelatedObject)
+            {
+                if(array_key_exists($CollectionRelatedObject['CollectionID'],$arrCollectionbatch)){
+                    $arrcreaterel = $CollectionRelatedObject;
+                    $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->LocationEntries[] = $arrcreaterel;
+                   // $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->HERE = '****L****';
+                }
+            }
+            //Locations
+
+            //DigitalObjects
+
+            $arrCollectionDigitalContentIDs =  getCollectionDigitalContentIDs();
+
+            foreach ($arrCollectionCreator as $CollectionRelatedObject)
+            {
+                if(array_key_exists($CollectionRelatedObject['CollectionID'],$arrCollectionbatch)){
+                    $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->DigitalContent[] = $CollectionRelatedObject['ID'];
+                   // $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->HERE = '****D****';
+                }
+            }
+
+
+             echo json_encode($arrCollectionbatch);
         }
         else
         {
@@ -36,6 +96,130 @@ if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
     }
 } else {
     echo "Please provide Username and Password";
+}
+
+function getCollectioncreators()
+{
+    global $_ARCHON;
+
+
+    $query = "SELECT CollectionID,CreatorID FROM tblcollections_collectioncreatorindex";
+    $result = $_ARCHON->mdb2->query($query);
+
+
+    if(PEAR::isError($result))
+    {
+        trigger_error($result->getMessage(), E_USER_ERROR);
+    }
+
+    while($row = $result->fetchRow())
+    {
+        $arrCollectionCreators [] = $row;
+
+    }
+
+    $result->free();
+
+    return $arrCollectionCreators;
+
+
+
+}
+function getCollectionDigitalContentIDs()
+{
+    global $_ARCHON;
+
+
+    $query = "SELECT CollectionID,ID FROM tbldigitallibrary_digitalcontent";
+    $result = $_ARCHON->mdb2->query($query);
+
+
+    if(PEAR::isError($result))
+    {
+        trigger_error($result->getMessage(), E_USER_ERROR);
+    }
+
+    while($row = $result->fetchRow())
+    {
+        $arrCollectionDigitalContentIDs [] = $row;
+
+    }
+
+    $result->free();
+
+    return $arrCollectionDigitalContentIDs;
+
+
+
+}
+function getCollectionSubjects()
+{
+    global $_ARCHON;
+
+
+    $query = "SELECT DISTINCT CollectionID,SubjectID FROM tblcollections_collectionsubjectindex";
+    $result = $_ARCHON->mdb2->query($query);
+
+
+    if(PEAR::isError($result))
+    {
+        trigger_error($result->getMessage(), E_USER_ERROR);
+    }
+
+    while($row = $result->fetchRow())
+    {
+        $arrCollectionSubjects [] = $row;
+
+    }
+
+    $result->free();
+
+    return $arrCollectionSubjects;
+
+
+
+}
+function getCollectionlocations()
+{
+    global $_ARCHON;
+
+
+    $query = "SELECT
+                Location,
+                Description,
+                RepositoryLimit,
+                CollectionID,
+                LocationID,
+                Content,
+                Shelf,
+                Extent,
+                Section,
+                RangeValue,
+                ExtentUnitID
+                FROM
+                tblcollections_locations
+                INNER JOIN tblcollections_collectionlocationindex ON LocationID = tblcollections_locations.ID
+                ";
+    $result = $_ARCHON->mdb2->query($query);
+
+
+    if(PEAR::isError($result))
+    {
+        trigger_error($result->getMessage(), E_USER_ERROR);
+    }
+
+    while($row = $result->fetchRow())
+    {
+        $arrCollectionlocations [] = $row;
+
+    }
+
+    $result->free();
+
+    return $arrCollectionlocations;
+
+
+
 }
 
 
