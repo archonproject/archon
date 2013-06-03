@@ -1562,9 +1562,8 @@ abstract class Core_Archon
 
       foreach($arrUsers as &$objUser)
       {
-         $objUser->dbLoadUsergroups();
-         $objUser->dbLoadPermissions();
-		 $objUser->dbLoadRepositories();
+         $objUser->dbLoadUsergroupIDs();
+		 $objUser->dbLoadRepositoryIDs();
       }
 
       $arrUsers[-1] = New User(-1);

@@ -23,13 +23,12 @@ if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
                 $SearchFlags = $in_SearchFlags ? $in_SearchFlags : SEARCH_ACCESSIONS;
 
                 $arrAccessions = $_ARCHON->searchAccessions('', $SearchFlags, 0, $objCollection->ID);
-                //echo  print_r($arrAccessions);
+                echo  json_encode($arrAccessions);
 
 
 
                 $arrAccessionbatch = (array_slice($arrAccessions,$start-1,100));
-
-
+				
                 //Collections and Classifications
                 $arrAccessionCollection = getAccessioncollections();
 
@@ -76,7 +75,7 @@ if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
                  //Locations
 
 
-                     echo json_encode($arrAccessionbatch);
+                     //echo json_encode($arrAccessionbatch);
        }else{
                 echo "batch_start Not found! Please enter a batch_start and resubmit the request.";
 
@@ -95,7 +94,7 @@ function getAccessioncreators()
     global $_ARCHON;
 
 
-    $query = "SELECT AccessionID,CreatorID FROM tblaccessions_accessioncreatorindex";
+    $query = "SELECT AccessionID,CreatorID FROM tblAccessions_AccessionCreatorIndex";
     $result = $_ARCHON->mdb2->query($query);
 
 
@@ -122,7 +121,7 @@ function getAccessioncollections()
     global $_ARCHON;
 
 
-    $query = "SELECT AccessionID,CollectionID,ClassificationID FROM tblaccessions_accessioncollectionindex";
+    $query = "SELECT AccessionID,CollectionID,ClassificationID FROM tblAccessions_AccessionCollectionIndex";
     $result = $_ARCHON->mdb2->query($query);
 
 
@@ -149,7 +148,7 @@ function getAccessionSubjects()
     global $_ARCHON;
 
 
-    $query = "SELECT AccessionID,SubjectID FROM tblaccessions_accessionsubjectindex";
+    $query = "SELECT AccessionID,SubjectID FROM tblAccessions_AccessionSubjectIndex";
     $result = $_ARCHON->mdb2->query($query);
 
 
@@ -176,7 +175,7 @@ function getAccessionlocations()
     global $_ARCHON;
 
 
-    $query = "SELECT AccessionID,LocationID FROM tblaccessions_accessionlocationindex";
+    $query = "SELECT AccessionID,LocationID FROM tblAccessions_AccessionLocationIndex";
     $result = $_ARCHON->mdb2->query($query);
 
 

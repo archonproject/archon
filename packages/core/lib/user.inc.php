@@ -230,6 +230,59 @@ abstract class Core_User
    }
 
 
+ /**
+    * Loads Repositories for User from the database
+    *
+    * @return boolean
+    */
+   public function dbLoadRepositoryIDs()
+   {
+      global $_ARCHON;
+
+      if(!$this->ID)
+      {
+         $_ARCHON->declareError("Could not load Repositories: User ID not defined.");
+         return false;
+      }
+
+      if(!is_natural($this->ID))
+      {
+         $_ARCHON->declareError("Could not load Repositories: User ID must be numeric.");
+         return false;
+      }
+
+      $this->Repositories = array();
+
+      $query = "SELECT tblCore_Repositories.* FROM tblCore_Repositories JOIN tblCore_UserRepositoryIndex ON tblCore_Repositories.ID = tblCore_UserRepositoryIndex.RepositoryID WHERE tblCore_UserRepositoryIndex.UserID = ? ORDER BY tblCore_Repositories.Name";
+      $prep = $_ARCHON->mdb2->prepare($query, 'integer', MDB2_PREPARE_RESULT);
+      $result = $prep->execute($this->ID);
+
+      if(PEAR::isError($result))
+      {
+         trigger_error($result->getMessage(), E_USER_ERROR);
+      }
+
+      if(!$result->numRows())
+      {
+         return true;
+      }
+
+      while($row = $result->fetchRow())
+      {
+       array_push($this->Repositories, $row['ID']);
+       //$this->Repositories[$row['ID']] = New Repository($row);
+      }
+
+      $result->free();
+      $prep->free();
+
+      return true;
+   }
+
+
+
+
+
 
 
 
@@ -282,6 +335,59 @@ abstract class Core_User
    }
 
 
+
+
+ /**
+    * Loads UsergroupIDs for User from the database to an array for use in json output
+    *
+    * @return boolean
+    */
+   public function dbLoadUsergroupIDs()
+   {
+      global $_ARCHON;
+
+      if(!$this->ID)
+      {
+         $_ARCHON->declareError("Could not load Usergroups: User ID not defined.");
+         return false;
+      }
+
+      if(!is_natural($this->ID))
+      {
+         $_ARCHON->declareError("Could not load Usergroups: User ID must be numeric.");
+         return false;
+      }
+
+      $this->Usergroups = array();
+
+      if(!$this->IsAdminUser)
+      {
+         return true;
+      }
+
+      $query = "SELECT tblCore_Usergroups.* FROM tblCore_Usergroups JOIN tblCore_UserUsergroupIndex ON tblCore_Usergroups.ID = tblCore_UserUsergroupIndex.UsergroupID WHERE tblCore_UserUsergroupIndex.UserID = ? ORDER BY tblCore_Usergroups.Usergroup";
+      $prep = $_ARCHON->mdb2->prepare($query, 'integer', MDB2_PREPARE_RESULT);
+      $result = $prep->execute($this->ID);
+      if(PEAR::isError($result))
+      {
+         trigger_error($result->getMessage(), E_USER_ERROR);
+      }
+
+      if(!$result->numRows())
+      {
+         return true;
+      }
+
+      while($row = $result->fetchRow())
+      {      
+		 array_push($this->Usergroups, $row['ID']);
+      }
+
+      $result->free();
+      $prep->free();
+
+      return true;
+   }
 
 
 

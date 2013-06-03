@@ -28,7 +28,7 @@ function SetCountry($Rep) {
     foreach ($Rep as $repository) {
         //echo print_r($repository->CountryID);
         // echo print_r($repository);
-        $repository->Country = $arrCountries[$repository->CountryID]->ISOAlpha2;
+        $repository->Country = $arrCountries[$repository->CountryID]->ISOAlpha3;
     }
 
     return $Rep;
