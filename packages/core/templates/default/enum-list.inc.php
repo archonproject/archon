@@ -24,9 +24,8 @@ $enumtype =$_REQUEST['enum_type'];
                 echo json_encode(array_values($_ARCHON->getAllCreatorSources()));
                 break;
             case 'extentunits';
-                   echo json_encode(array_values($_ARCHON->getAllExtentUnits()));
-
-                break;
+                echo json_encode(array_values($_ARCHON->getAllExtentUnits()));
+                break; 
             case 'filetypes';
                 echo json_encode(array_values($_ARCHON->getAllFileTypes()));
                 break;
@@ -39,13 +38,21 @@ $enumtype =$_REQUEST['enum_type'];
             case 'descriptiverules';
                 echo json_encode(array_values($_ARCHON->getAllDescriptiveRules()));
                 break;
-
-            case 'creatorrelationship';
+            case 'creatorrelationships';
                 echo json_encode(array_values($_ARCHON->getAllCreatorRelationshipTypes()));
                 break;
             case 'usergroups';
                 echo json_encode(array_values($_ARCHON->getAllUsergroups()));
                 break;
+            case 'subjectsources';
+            	echo json_encode(array_values($_ARCHON->getAllSubjectSources()));
+                break;         
+        	case 'subjecttypes';
+                echo $_ARCHON->getSubjectTypeJSONList();
+                break; 
+            default;
+       			echo ("enum_type not found.  Allowed values:'creatorsources', 'extentunits', 'filetypes', 'materialtypes', 'levelcontainers', 'descriptiverules', 'creatorrelationships', 'usergroups', 'subjectsources', and 'subjecttypes'.  Please try again.");   
+				break;
         }
 
     } else {
