@@ -586,7 +586,7 @@ if ($objCollection->CollectionIdentifier) {
             <?php
                            foreach ($arrDigitalContent as $dc) {
             ?>
-                           <daoloc xlink:type="simple" xlink:href="<?php echo($dc->ContentURL); ?>"xlink:actuate="onRequest" xlink:show="new">
+                           <daoloc xlink:type="simple" xlink:href="<?php echo($dc->ContentURL); ?>" xlink:actuate="onRequest" xlink:show="new">
                               <daodesc>
                                  <head>Title:</head>
                                  <p><?php echo(bbcode_ead_encode($dc->getString('Title', 0, false, false))); ?></p>
