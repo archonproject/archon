@@ -188,6 +188,62 @@ abstract class Subjects_Archon
       }
    }
 
+ /**
+    * Retrieves all Subjects from the database in ID order and w/out subject sources, 
+    * for ASpace migration
+    *
+    * If $MakeIntoIndex is false, the returned array of Subject objects
+    * is sorted by Subject and has IDs as keys.
+    *
+    * If $MakeIntoIndex is true, the returned array is a
+    * two dimensional array, with the first dimension indexed with
+    * 0 (representing numeric characters) and the lowercase characters a-z.
+    * Each of those arrays will contain a sorted set of Subject objects, with
+    * the Subject's IDs as keys.
+    *
+    * @param boolean $MakeIntoIndex[optional]
+    * @return Subject[]
+    */
+   public function getAllSubjectsforJSON($MakeIntoIndex = false)
+   {
+      $arrSubjects = $this->loadTable("tblSubjects_Subjects", "Subject", "ID");
+
+      if($MakeIntoIndex)
+      {
+         foreach($arrSubjects as $objSubject)
+         {
+            $arrSorter[$objSubject->toString(LINK_NONE, true)] = $objSubject;
+         }
+
+         natcaseksort($arrSorter);
+
+         $arrIndex = array();
+
+         if(!empty($arrSorter))
+         {
+            foreach($arrSorter as $strSubject => &$objSubject)
+            {
+               if(is_natural($strSubject{0}))
+               {
+                  $arrIndex['#'][$objSubject->ID] = $objSubject;
+               }
+
+               $arrIndex[encoding_strtolower($strSubject{0})][$objSubject->ID] = $objSubject;
+            }
+
+            ksort($arrIndex);
+         }
+
+         return $arrIndex;
+      }
+      else
+      {
+         return $arrSubjects;
+      }
+   }
+
+
+
    /**
     * Retrieves all Subjects for a subject type from the database
     *
