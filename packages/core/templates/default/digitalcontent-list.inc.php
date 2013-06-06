@@ -64,7 +64,7 @@ if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
                 }
                  //Files
 
-                     echo json_encode($arrDigitalContentbatch);
+                     echo json_encode(array_values($arrDigitalContentbatch));
         }else{
             echo "batch_start Not found! Please enter a batch_start and resubmit the request.";
 
