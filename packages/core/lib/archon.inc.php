@@ -4035,10 +4035,14 @@ abstract class Core_Archon
     * @param string $ClassName
     * @param string $OrderBy[optional]
     * @param string $Condition[optional]
+    * @param string $ConditionTypes[optional]
+    * @param string $ConditionVarsl[optional]
+    * @param boolean $NoMemoryCache[optional]
+    * @param array $SelectFields[optional]
+    * @param boolean $LoadParents[optional]
     * @return $ClassName[]
     */
-   public function loadTable($Table, $ClassName, $OrderBy = NULL, $Condition = NULL, $ConditionTypes = NULL, $ConditionVars = NULL, $NoMemoryCache = false, $SelectFields = array())
-   {
+   public function loadTable($Table, $ClassName, $OrderBy = NULL, $Condition = NULL, $ConditionTypes = NULL, $ConditionVars = NULL, $NoMemoryCache = false, $SelectFields = array(), $LoadParents = true)   {
       if(!$Table)
       {
          $this->declareError("Could not load Table: Table Name not defined.");
@@ -4117,11 +4121,11 @@ abstract class Core_Archon
       $result->free();
       $prep->free();
 
-      if(!empty($arrParents))
+      if(!empty($arrParents) && $LoadParents == true)
       {
          foreach($arrParents as $ID => $ParentID)
          {
-            if($arrObjects[$ParentID])
+            if($arrObjects[$ParentID] )
             {
                if(!$NoMemoryCache)
                {

@@ -38,7 +38,7 @@ $enumtype =$_REQUEST['enum_type'];
             case 'descriptiverules';
                 echo json_encode(array_values($_ARCHON->getAllDescriptiveRules()));
                 break;
-            case 'creatorrelationships';
+            case 'creatorrelationshiptypes';
                 echo json_encode(array_values($_ARCHON->getAllCreatorRelationshipTypes()));
                 break;
             case 'usergroups';
