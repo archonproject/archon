@@ -31,7 +31,7 @@ if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
 
 
 
-            $arrCollectionbatch=(array_slice($_ARCHON->getAllCollections(),$start-1,10));
+            $arrCollectionbatch=(array_slice($_ARCHON->getAllCollections(),$start-1,10,true));
 
             //Creators
             $arrCollectionCreator = getCollectioncreators();
@@ -40,7 +40,7 @@ if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
             {
                 if(array_key_exists($CollectionRelatedObject['CollectionID'],$arrCollectionbatch)){
                     $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->Creators[] = $CollectionRelatedObject['CreatorID'];
-                   // $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->HERE = '****C****';
+                   
                 }
             }
             //Creators
@@ -52,7 +52,7 @@ if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
             {
                 if(array_key_exists($CollectionRelatedObject['CollectionID'],$arrCollectionbatch)){
                     $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->Subjects[] = $CollectionRelatedObject['SubjectID'];
-                   // $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->HERE = '****S****';
+
                 }
             }
             //Subjects
@@ -64,8 +64,8 @@ if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
             {
                 if(array_key_exists($CollectionRelatedObject['CollectionID'],$arrCollectionbatch)){
                     $arrcreaterel = $CollectionRelatedObject;
-                    $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->LocationEntries[] = $arrcreaterel;
-                   // $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->HERE = '****L****';
+                    $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->LocationEntries[] = array_slice($arrcreaterel,1);
+
                 }
             }
             //Locations
@@ -78,12 +78,12 @@ if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
             {
                 if(array_key_exists($CollectionRelatedObject['CollectionID'],$arrCollectionbatch)){
                     $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->DigitalContent[] = $CollectionRelatedObject['ID'];
-                   // $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->HERE = '****D****';
+
                 }
             }
 
 
-             echo json_encode($arrCollectionbatch);
+             echo json_encode(array_values($arrCollectionbatch));
         }
         else
         {
@@ -103,7 +103,7 @@ function getCollectioncreators()
     global $_ARCHON;
 
 
-    $query = "SELECT CollectionID,CreatorID FROM tblcollections_collectioncreatorindex";
+    $query = "SELECT CollectionID,CreatorID FROM tblCollections_CollectionCreatorIndex";
     $result = $_ARCHON->mdb2->query($query);
 
 
@@ -130,7 +130,7 @@ function getCollectionDigitalContentIDs()
     global $_ARCHON;
 
 
-    $query = "SELECT CollectionID,ID FROM tbldigitallibrary_digitalcontent";
+    $query = "SELECT CollectionID,ID FROM tblDigitalLibrary_DigitalContent";
     $result = $_ARCHON->mdb2->query($query);
 
 
@@ -157,7 +157,7 @@ function getCollectionSubjects()
     global $_ARCHON;
 
 
-    $query = "SELECT DISTINCT CollectionID,SubjectID FROM tblcollections_collectionsubjectindex";
+    $query = "SELECT DISTINCT CollectionID,SubjectID FROM tblCollections_CollectionSubjectIndex";
     $result = $_ARCHON->mdb2->query($query);
 
 
@@ -185,11 +185,11 @@ function getCollectionlocations()
 
 
     $query = "SELECT
+                 CollectionID,
+                LocationID,
                 Location,
                 Description,
                 RepositoryLimit,
-                CollectionID,
-                LocationID,
                 Content,
                 Shelf,
                 Extent,
@@ -197,8 +197,8 @@ function getCollectionlocations()
                 RangeValue,
                 ExtentUnitID
                 FROM
-                tblcollections_locations
-                INNER JOIN tblcollections_collectionlocationindex ON LocationID = tblcollections_locations.ID
+                tblCollections_Locations
+                INNER JOIN tblCollections_CollectionLocationIndex ON LocationID = tblCollections_Locations.ID
                 ";
     $result = $_ARCHON->mdb2->query($query);
 

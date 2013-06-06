@@ -27,7 +27,7 @@ if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
 
 
 
-                $arrDigitalContentbatch = (array_slice($arrDigitalContent,$start-1,100));
+                $arrDigitalContentbatch = (array_slice($arrDigitalContent,$start-1,100,true));
 
 
 
@@ -83,7 +83,7 @@ function getDigitalContentCreator()
     global $_ARCHON;
 
 
-    $query = "SELECT DigitalContentID,CreatorID FROM tbldigitallibrary_digitalcontentcreatorindex";
+    $query = "SELECT DigitalContentID,CreatorID FROM tblDigitalLibrary_DigitalContentCreatorIndex";
     $result = $_ARCHON->mdb2->query($query);
 
 
@@ -111,7 +111,7 @@ function getDigitalContentSubjects()
     global $_ARCHON;
 
 
-    $query = "SELECT DigitalContentID,SubjectID FROM tbldigitallibrary_digitalcontentsubjectindex";
+    $query = "SELECT DigitalContentID,SubjectID FROM tblDigitalLibrary_DigitalContentSubjectIndex";
     $result = $_ARCHON->mdb2->query($query);
 
 
@@ -138,7 +138,7 @@ function getDigitalContentFile()
     global $_ARCHON;
 
 
-    $query = "SELECT DigitalContentID,ID FROM tbldigitallibrary_files";
+    $query = "SELECT DigitalContentID,ID FROM tblDigitalLibrary_Files";
     $result = $_ARCHON->mdb2->query($query);
 
 

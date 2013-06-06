@@ -23,12 +23,13 @@ if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
                 $SearchFlags = $in_SearchFlags ? $in_SearchFlags : SEARCH_ACCESSIONS;
 
                 $arrAccessions = $_ARCHON->searchAccessions('', $SearchFlags, 0, $objCollection->ID);
-                echo  json_encode($arrAccessions);
+                //echo  print_r($arrAccessions);
 
 
 
-                $arrAccessionbatch = (array_slice($arrAccessions,$start-1,100));
-				
+                $arrAccessionbatch = (array_slice($arrAccessions,$start-1,100,true));
+
+
                 //Collections and Classifications
                 $arrAccessionCollection = getAccessioncollections();
 
@@ -69,13 +70,13 @@ if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
                 foreach ($arrAccesslocations as $accessionRelatedObject)
                 {
                     if(array_key_exists($accessionRelatedObject['AccessionID'],$arrAccessionbatch)){
-                    $arrAccessionbatch[$accessionRelatedObject['AccessionID']]->LocationEntries[] = $accessionRelatedObject['LocationID'];
+                    $arrAccessionbatch[$accessionRelatedObject['AccessionID']]->LocationEntries[] = array_slice($accessionRelatedObject,1);
                     }
                 }
                  //Locations
 
 
-                     //echo json_encode($arrAccessionbatch);
+                     echo json_encode(array_values($arrAccessionbatch));
        }else{
                 echo "batch_start Not found! Please enter a batch_start and resubmit the request.";
 
@@ -175,7 +176,18 @@ function getAccessionlocations()
     global $_ARCHON;
 
 
-    $query = "SELECT AccessionID,LocationID FROM tblAccessions_AccessionLocationIndex";
+    $query = "SELECT
+                AccessionID,
+                LocationID,
+                Location,
+                Description,
+                Content,
+                RangeValue,
+                Section,
+                RepositoryLimit
+                FROM
+                tblAccessions_AccessionLocationIndex
+                INNER JOIN tblCollections_Locations ON tblAccessions_AccessionLocationIndex.LocationID = tblCollections_Locations.ID";
     $result = $_ARCHON->mdb2->query($query);
 
 
