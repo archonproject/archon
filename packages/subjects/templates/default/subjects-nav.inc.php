@@ -15,12 +15,11 @@
  */
 
 isset($_ARCHON) or die();
-
 ?>
 
 <h1 id='titleheader'><?php echo($strPageTitle); ?></h1>
    <div class="<?php echo($strSubTitleClasses); ?> center"><?php echo($strSubTitle); ?></div><br />
-   <div class="bground beginningwith"<?php echo($strBackgroundID); ?>><div class='listitemcover'></div>
+   <div class="bground beginningwith" id="<?php echo($strBackgroundID); ?>"><div class='listitemcover'></div>
 		<?php echo($content); ?>
 </div>
 <br />
