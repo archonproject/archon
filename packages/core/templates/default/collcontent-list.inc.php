@@ -17,8 +17,15 @@ if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
     if (!$_ARCHON->Error) {
 
         if ($_REQUEST['cid']){
-
-            loadCollectionContent();
+            if ($_REQUEST['batch_start']){
+                $start = ( $_REQUEST['batch_start'] < 1 ? 1: $_REQUEST['batch_start']);
+                $arrout=loadCollectionContent($start);
+              echo json_encode(($arrout));
+            }
+            else
+            {
+                echo "batch_start Not found! Please enter a batch_start and resubmit the request.";
+            }
         }
         else
         {
@@ -34,7 +41,7 @@ if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
 }
 
 
-function loadCollectionContent(){
+function loadCollectionContent($start){
 
 
     global $_ARCHON;
@@ -43,32 +50,36 @@ function loadCollectionContent(){
 
 
 
-        // get all root nodes
-       // $arrObjects[] = $_ARCHON->getChildCollectionContent(0, $cid);
-
-        // traverse the path of nodes, adding all content at that level to the array
-
-
-
-
-       /* $i = !$add_ghost_node ? count($arrNodes) : count($arrNodes) + 1;
-        $deepest_i = $i - 1;
-        $found_leaf = false;*/
-
-        // iterate through array of nodes in bottom up order*/
-       // $arrObjects = array_reverse($arrObjects);
 
     $objCollection = New Collection($_REQUEST['cid']);
     //echo print_r($objCollection);
     $objCollection->dbLoadContentjson();  //optional parameter limits to only one root node
-    $out = json_encode (array_values($objCollection->Content));
-    echo ($out);
 
-    //echo json_encode(array_values($arrObjects));
+    $arrContent[]= array_slice($objCollection->Content,$start-1,100,true);
+    $arrDisplay[]= array();
+
+    foreach ( $arrContent as $contentObj)
+    {
+        if ($contentObj['ParentID'] == 0)
+        {// Top Node Loaded first
+           array_unshift($arrDisplay,$contentObj);
+        }
+        else
+        {//if parent loaded the Add
+            if($arrDisplay[$contentObj->ParentID]){
+                array_push($arrDisplay,$contentObj);
+            }
+            else{//if no parent find parent added parent add node remove parent from heap to avoid duplication
+                array_push($arrDisplay,$arrContent[$contentObj->ParentID]);
+                array_push($arrDisplay,$contentObj);
+                unset($arrContent[$contentObj->ParentID]); //remove the already added parent  to stop duplication.
+            }
 
 
+        }
+    }
 
-
+return array_values($arrDisplay);
 
 }
 
