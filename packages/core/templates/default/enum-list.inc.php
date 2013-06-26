@@ -9,15 +9,11 @@ isset($_ARCHON) or die();
 
 // echo print_r($arrCountries);
 
-
-if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
-    if (!$_ARCHON->Security->verifyCredentials($_REQUEST['apilogin'], $_REQUEST['apipassword'])) {
-        $_ARCHON->declareError("Authentication Failed");
-    }
-    if (!$_ARCHON->Error) {
+$session= $_SERVER['HTTP_SESSION'];
+if ($_ARCHON->Security->Session->verifysession($session)){
 
 
-$enumtype =$_REQUEST['enum_type'];
+    $enumtype =$_REQUEST['enum_type'];
 
         switch ($enumtype) {
             case 'creatorsources';
@@ -55,11 +51,9 @@ $enumtype =$_REQUEST['enum_type'];
 				break;
         }
 
-    } else {
-        echo "Authentication Failed";
-    }
+
 } else {
-    echo "Please provide Username and Password";
+    echo "Please submit your admin credentials to p=core/authenticate";
 }
 
 

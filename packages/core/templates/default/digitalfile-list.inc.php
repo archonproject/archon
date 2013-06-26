@@ -1,39 +1,27 @@
 <?php
 header('Content-Type: application/json');
 isset($_ARCHON) or die();
+//$_ARCHON->Security->Session->destroy();
+//echo print_r($_SERVER);
 
-
-
-if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
-    if (!$_ARCHON->Security->verifyCredentials($_REQUEST['apilogin'], $_REQUEST['apipassword'])) {
-        $_ARCHON->declareError("Authentication Failed");
-    }
-    if (!$_ARCHON->Error) {
+$session= $_SERVER['HTTP_SESSION'];
+ if ($_ARCHON->Security->Session->verifysession($session)){
+  
 //Handles the zero condition
         if ($_REQUEST['batch_start']){
                 $start = ( $_REQUEST['batch_start'] < 1 ? 1: $_REQUEST['batch_start']);
 
         // pulls Batches of 100 across
-
-
-            $arrDigitalContentFiles = getDigitalContentFile();
+        $arrDigitalContentFiles = getDigitalContentFile();
 
         //echo  print_r($arrAccessions);
-
-
-
-                     echo json_encode(array_values($arrDigitalContentFiles));
+        echo json_encode(array_values($arrDigitalContentFiles));
+		
         }else{
             echo "batch_start Not found! Please enter a batch_start and resubmit the request.";
-
-        }
-
-
-    } else {
-        echo "Authentication Failed";
-    }
+        }  
 } else {
-    echo "Please provide Username and Password";
+    echo "Please submit your admin credentials to p=core/authenticate";
 }
 
 

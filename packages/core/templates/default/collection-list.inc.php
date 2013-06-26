@@ -10,13 +10,10 @@ isset($_ARCHON) or die();
 // echo print_r($arrCountries);
 
 
-if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
-    if (!$_ARCHON->Security->verifyCredentials($_REQUEST['apilogin'], $_REQUEST['apipassword'])) {
-        $_ARCHON->declareError("Authentication Failed");
-    }
-    if (!$_ARCHON->Error) {
+$session= $_SERVER['HTTP_SESSION'];
+if ($_ARCHON->Security->Session->verifysession($session)){
 
-        if ($_REQUEST['batch_start']){
+    if ($_REQUEST['batch_start']){
 
             //Handles the zero condition
             $start = ( $_REQUEST['batch_start'] < 1 ? 1: $_REQUEST['batch_start']);
@@ -31,7 +28,7 @@ if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
 
 
 
-            $arrCollectionbatch=(array_slice($_ARCHON->getAllCollections(),$start-1,10,true));
+            $arrCollectionbatch=(array_slice($_ARCHON->getAllCollections(),$start-1,100,true));
 
             //Creators
             $arrCollectionCreator = getCollectioncreators();
@@ -91,12 +88,9 @@ if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
 
         }
 
-    } else {
-        echo "Authentication Failed";
-    }
+
 } else {
-    echo "Please provide Username and Password";
-}
+    echo "Please submit your admin credentials to p=core/authenticate";}
 
 function getCollectioncreators()
 {

@@ -7,18 +7,14 @@ isset($_ARCHON) or die();
 
 
  // echo print_r($arrCountries);
- 
- if ($_REQUEST['apilogin'] && $_REQUEST['apipassword']) {
-    if (!$_ARCHON->Security->verifyCredentials($_REQUEST['apilogin'], $_REQUEST['apipassword'])) {
-        $_ARCHON->declareError("Authentication Failed");
-    }
-    if (!$_ARCHON->Error) {
+
+$session= $_SERVER['HTTP_SESSION'];
+if ($_ARCHON->Security->Session->verifysession($session)){
+
        echo json_encode(SetCountry($_ARCHON->getAllRepositories()));
-    } else {
-        echo "Authentication Failed";
-    }
+
 } else {
-    echo "Please provide Username and Password";
+    echo "Please submit your admin credentials to p=core/authenticate";
 }
 
 
