@@ -23,9 +23,44 @@ function SetCountry($Rep) {
     foreach ($Rep as $repository) {
         //echo print_r($repository->CountryID);
         // echo print_r($repository);
-        $repository->Country = $arrCountries[$repository->CountryID]->ISOAlpha2;
+        if ($repository->IsAdminUser == 0){
+            unset($Rep[$repository->ID]);
+        }
+        else{
+            $repository->Country = $arrCountries[$repository->CountryID]->ISOAlpha2;
+
+        }
+      
     }
 
+	
+	array_walk($Rep, 'RemoveElement');
+	
+	
     return $Rep;
 }
+
+
+
+function RemoveElement($item, $key){
+	//echo "$key holds $item\n";
+	//echo print_r($item);
+  
+	unset($item->RegisterTime);
+	unset($item->Pending );
+	unset($item->PendingHash );
+	unset($item->LanguageID );
+	unset($item-> CountryID );
+	unset($item->Locked );
+	unset($item->PasswordHash );
+	unset($item->Password);
+	unset($item->Language);
+	unset($item->Country);
+	unset($item->Persmissions);
+	unset($item->HomeWidgets);
+	unset($item->Cart);
+
+
+}
+
 ?>

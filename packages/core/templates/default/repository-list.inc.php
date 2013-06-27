@@ -27,6 +27,24 @@ function SetCountry($Rep) {
         $repository->Country = $arrCountries[$repository->CountryID]->ISOAlpha3;
     }
 
+   
+	array_walk($Rep, 'RemoveElement');
+	
+	
     return $Rep;
+}
+
+
+
+function RemoveElement($item, $key){
+	//echo "$key holds $item\n";
+	//echo print_r($item);
+  
+	unset($item->Administrator);
+	unset($item->CountryID );
+	unset($item->TemplateSet);
+	unset($item->ResearchFunctionality);
+	
+
 }
 ?>

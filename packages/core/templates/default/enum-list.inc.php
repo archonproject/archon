@@ -38,7 +38,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                 echo json_encode(array_values($_ARCHON->getAllCreatorRelationshipTypes()));
                 break;
             case 'usergroups';
-                echo json_encode(array_values($_ARCHON->getAllUsergroups()));
+					$arrusergroups = $_ARCHON->getAllUsergroups();
+                echo json_encode(removeElement($arrusergroups));
                 break;
             case 'subjectsources';
             	echo json_encode(array_values($_ARCHON->getAllSubjectSources()));
@@ -57,5 +58,30 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 }
 
 
+
+function removeElement($obj){
+
+array_walk_recursive($obj, 'groupUserRemoveElement');
+
+return  $obj;
+}
+
+
+
+
+function groupUserRemoveElement($item,$key){
+	echo "------\n";
+	echo print_r($item);
+    echo "------";
+	unset($item->DefaultPermissions);
+	unset($item->DefaultPersmissionsRead);
+	unset($item->DefaultPersmissionsAdd);
+	unset($item->DefaultPersmissionsUpdate);
+	unset($item->DefaultPersmissionsDelete);
+	unset($item->DefaultPersmissionsFullControl);
+
+	
+
+}
 
 ?>
