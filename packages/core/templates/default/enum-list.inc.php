@@ -1,87 +1,84 @@
 <?php
 header('Content-Type: application/json');
-
 isset($_ARCHON) or die();
-
-//echo print_r($_ARCHON) ;
-//echo print_r($_ARCHON->AdministrativeInterface);
-
-
-// echo print_r($arrCountries);
 
 $session= $_SERVER['HTTP_SESSION'];
 if ($_ARCHON->Security->Session->verifysession($session)){
 
-
-    $enumtype =$_REQUEST['enum_type'];
-
-        switch ($enumtype) {
-            case 'creatorsources';
-                echo json_encode(array_values($_ARCHON->getAllCreatorSources()));
-                break;
-            case 'extentunits';
-                echo json_encode(array_values($_ARCHON->getAllExtentUnits()));
-                break; 
-            case 'filetypes';
-                echo json_encode(array_values($_ARCHON->getAllFileTypes()));
-                break;
-            case 'materialtypes';
-                echo json_encode(array_values($_ARCHON->getAllMaterialTypes()));
-                break;
-            case 'levelcontainers';
-                echo json_encode(array_values($_ARCHON->getAllLevelContainers()));
-                break;
-            case 'descriptiverules';
-                echo json_encode(array_values($_ARCHON->getAllDescriptiveRules()));
-                break;
-            case 'creatorrelationshiptypes';
-                echo json_encode(array_values($_ARCHON->getAllCreatorRelationshipTypes()));
-                break;
-            case 'usergroups';
+  if (isset($_REQUEST['batch_start'])){  // isset accounts for the zero condition
+        	$start = ($_REQUEST['batch_start'] < 1 ? 1: $_REQUEST['batch_start']);
+ 			$enumtype =$_REQUEST['enum_type'];
+ 			
+ 			
+ 		
+ 		  switch ($enumtype) {
+            	
+            	case 'creatorsources';
+                	echo json_encode(array_slice(array_values($_ARCHON->getAllCreatorSources()),$start-1,100,true));
+                	break;
+            	
+            	case 'extentunits';
+                	echo json_encode(array_slice(array_values($_ARCHON->getAllExtentUnits()),$start-1,100,true));
+                	break; 
+		
+         	 	case 'filetypes';
+         	       echo json_encode(array_slice(array_values($_ARCHON->getAllFileTypes()),$start-1,100,true));
+         	       break;
+         	       
+        	    case 'materialtypes';
+        	        echo json_encode(array_slice(array_values($_ARCHON->getAllMaterialTypes()),$start-1,100,true));
+        	        break;
+        	        
+       	  	   	case 'levelcontainers';
+       	         	echo json_encode(array_slice(array_values($_ARCHON->getAllLevelContainers()),$start-1,100,true));
+                	break;
+                	
+            	case 'descriptiverules';
+                	echo json_encode(array_slice(array_values($_ARCHON->getAllDescriptiveRules()),$start-1,100,true));
+                	break;
+                	
+            	case 'usergroups';
 					$arrusergroups = $_ARCHON->getAllUsergroups();
-                echo json_encode(removeElement($arrusergroups));
-                break;
-            case 'subjectsources';
-            	echo json_encode(array_values($_ARCHON->getAllSubjectSources()));
-                break;         
-        	case 'subjecttypes';
-                echo $_ARCHON->getSubjectTypeJSONList();
-                break; 
-            default;
-       			echo ("enum_type not found.  Allowed values:'creatorsources', 'extentunits', 'filetypes', 'materialtypes', 'levelcontainers', 'descriptiverules', 'creatorrelationships', 'usergroups', 'subjectsources', and 'subjecttypes'.  Please try again.");   
-				break;
-        }
+					array_walk($arrusergroups, 'RemoveUserGroupElements');
+                	echo json_encode(array_slice($arrusergroups,$start-1,100,true));
+                	break;
+                	
+            	case 'subjectsources';
+            		echo json_encode(array_slice(array_values($_ARCHON->getAllSubjectSources()),$start-1,100,true));
+                	break;        	
+        
+            	default;
+       				echo ("enum_type not found.  Allowed values:'creatorsources', 'extentunits', 'filetypes', 'materialtypes', 'levelcontainers', 'descriptiverules', 'usergroups', and 'subjectsources'.  Please try again.");   
+					break;			
+			}	
+			 			
+		}
+ 		
+    	else {
+            echo "batch_start Not found! Please enter a batch_start and resubmit the request.";
+    	}
+        
+} 
 
-
-} else {
+else {
     echo "Please submit your admin credentials to p=core/authenticate";
 }
 
 
 
-function removeElement($obj){
 
-array_walk_recursive($obj, 'groupUserRemoveElement');
-
-return  $obj;
-}
-
-
-
-
-function groupUserRemoveElement($item,$key){
-	echo "------\n";
-	echo print_r($item);
-    echo "------";
+function RemoveUserGroupElements($item, $key){
+  
+	unset($item->Permissions);
 	unset($item->DefaultPermissions);
-	unset($item->DefaultPersmissionsRead);
-	unset($item->DefaultPersmissionsAdd);
-	unset($item->DefaultPersmissionsUpdate);
-	unset($item->DefaultPersmissionsDelete);
-	unset($item->DefaultPersmissionsFullControl);
-
-	
-
+	unset($item->DefaultPermissionsRead);
+	unset($item->DefaultPermissionsAdd);
+	unset($item->DefaultPermissionsUpdate);
+	unset($item->DefaultPermissionsDelete);
+	unset($item->DefaultPermissionsDelete);
+	unset($item->DefaultPermissionsFullControl);
+	unset($item->Users);	
 }
+
 
 ?>
