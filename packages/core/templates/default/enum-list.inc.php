@@ -14,27 +14,27 @@ if ($_ARCHON->Security->Session->verifysession($session)){
  		  switch ($enumtype) {
             	
             	case 'creatorsources';
-                	echo json_encode(array_slice(array_values($_ARCHON->getAllCreatorSources()),$start-1,100,true));
+                	echo json_encode(array_slice($_ARCHON->getAllCreatorSources(),$start-1,100,true));
                 	break;
             	
             	case 'extentunits';
-                	echo json_encode(array_slice(array_values($_ARCHON->getAllExtentUnits()),$start-1,100,true));
+                	echo json_encode(array_slice($_ARCHON->getAllExtentUnits(),$start-1,100,true));
                 	break; 
 		
          	 	case 'filetypes';
-         	       echo json_encode(array_slice(array_values($_ARCHON->getAllFileTypes()),$start-1,100,true));
+         	       echo json_encode(array_slice($_ARCHON->getAllFileTypes(),$start-1,100,true));
          	       break;
          	       
         	    case 'materialtypes';
-        	        echo json_encode(array_slice(array_values($_ARCHON->getAllMaterialTypes()),$start-1,100,true));
+        	        echo json_encode(array_slice($_ARCHON->getAllMaterialTypes(),$start-1,100,true));
         	        break;
         	        
        	  	   	case 'levelcontainers';
-       	         	echo json_encode(array_slice(array_values($_ARCHON->getAllLevelContainers()),$start-1,100,true));
+       	         	echo json_encode(array_slice($_ARCHON->getAllLevelContainers(),$start-1,100,true));
                 	break;
                 	
             	case 'descriptiverules';
-                	echo json_encode(array_slice(array_values($_ARCHON->getAllDescriptiveRules()),$start-1,100,true));
+                	echo json_encode(array_slice($_ARCHON->getAllDescriptiveRules(),$start-1,100,true));
                 	break;
                 	
             	case 'usergroups';
@@ -44,7 +44,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                 	break;
                 	
             	case 'subjectsources';
-            		echo json_encode(array_slice(array_values($_ARCHON->getAllSubjectSources()),$start-1,100,true));
+            		echo json_encode(array_slice($_ARCHON->getAllSubjectSources(),$start-1,100,true));
                 	break;        	
         
             	default;
