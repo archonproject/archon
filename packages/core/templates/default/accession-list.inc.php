@@ -173,16 +173,17 @@ function getAccessionlocations()
 
     $query = "SELECT
                 AccessionID,
-                LocationID,
                 Location,
                 Description,
                 Content,
                 RangeValue,
                 Section,
-                RepositoryLimit
-                FROM
+            	Shelf,
+                Extent,
+                ExtentUnitID
+              FROM
                 tblAccessions_AccessionLocationIndex
-                INNER JOIN tblCollections_Locations ON tblAccessions_AccessionLocationIndex.LocationID = tblCollections_Locations.ID";
+              INNER JOIN tblCollections_Locations ON tblAccessions_AccessionLocationIndex.LocationID = tblCollections_Locations.ID";
     $result = $_ARCHON->mdb2->query($query);
 
 
