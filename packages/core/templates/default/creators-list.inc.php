@@ -34,13 +34,6 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 			array_walk($arrCreators,'Removefield');
             echo json_encode(array_slice(RemoveBad($arrCreators),$start-1,100,true));
 
-
-
-
-
-
-
-
         }else{
             echo "batch_start Not found! Please enter a batch_start and resubmit the request.";
         }
@@ -74,8 +67,6 @@ function getrelatedcreators()
         $result->free();
         return $arrCreatorsrelated;
 
-
-
 }
 function RemoveBad($Creators) {
     
@@ -95,9 +86,8 @@ function Removefield($item,$key){
 	unset($item->Books);
 	unset($item->Accessions); 
 	unset($item->DigitalContent);
-
-
-
+	unset($item->Language);
+	unset($item->Creators);
 
 }
 ?>
