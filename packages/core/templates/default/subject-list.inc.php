@@ -37,7 +37,6 @@ function RemoveElement($item, $key){
   
 	unset($item->SubjectType);
 	unset($item->SubjectSource);
-	unset($item->Parent);
 	unset($item->Collections);
 
 }
