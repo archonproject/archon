@@ -13,7 +13,7 @@ isset($_ARCHON) or die();
 $session= $_SERVER['HTTP_SESSION'];
 if ($_ARCHON->Security->Session->verifysession($session)){
 
-    if ($_REQUEST['batch_start']){
+   if (isset($_REQUEST['batch_start'])){
 
             //Handles the zero condition
             $start = ( $_REQUEST['batch_start'] < 1 ? 1: $_REQUEST['batch_start']);
@@ -24,14 +24,15 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 
            // $arrCreators =array_slice($_ARCHON->getAllCreators(),$start-1,100);
             $arrCreators = $_ARCHON->getAllCreators();
-
+				//echo print_R($arrCreators);
             foreach ($arrCreatorsrelated as $creatrel)
              {
                  $arrcreaterel = array($creatrel['RelatedCreatorID']=> $creatrel['CreatorRelationshipTypeID']);
                 $arrCreators[$creatrel['CreatorID']]->CreatorRelationships[] = $arrcreaterel;
 
             }
-            echo json_encode(array_slice($arrCreators,$start-1,100));
+			array_walk($arrCreators,'Removefield');
+            echo json_encode(array_slice(RemoveBad($arrCreators),$start-1,100,true));
 
 
 
@@ -76,5 +77,27 @@ function getrelatedcreators()
 
 
 }
+function RemoveBad($Creators) {
+    
+	array_walk($Creators, 'Removefield');		
+    return $Creators;
+}
 
+function Removefield($item,$key){
+	unset($item->LanguageID);
+	unset($item->ScriptID);
+	unset($item->CreatorType);
+	unset($item->CreatorSource);
+	unset($item->Repository);
+	unset($item->Script);
+	unset($item->ToStringFields);
+	unset($item->Collections);
+	unset($item->Books);
+	unset($item->Accessions); 
+	unset($item->DigitalContent);
+
+
+
+
+}
 ?>

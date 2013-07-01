@@ -14,7 +14,9 @@ if ($_ARCHON->Security->Session->verifysession($session)){
  		  switch ($enumtype) {
             	
             	case 'creatorsources';
-                	echo json_encode(array_slice($_ARCHON->getAllCreatorSources(),$start-1,100,true));
+                    $arrCreatorSources= $_ARCHON->getAllCreatorSources();
+                    array_walk($arrCreatorSources, 'RemoveCreatorElements');
+                	echo json_encode(array_slice($arrCreatorSources,$start-1,100,true));
                 	break;
             	
             	case 'extentunits';
@@ -22,7 +24,9 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                 	break; 
 		
          	 	case 'filetypes';
-         	       echo json_encode(array_slice($_ARCHON->getAllFileTypes(),$start-1,100,true));
+					$arrfiletypes = $_ARCHON->getAllFileTypes();
+					array_walk($arrfiletypes,'RemoveFiletypes');
+         	       echo json_encode(array_slice($arrfiletypes,$start-1,100,true));
          	       break;
          	       
         	    case 'materialtypes';
@@ -30,12 +34,14 @@ if ($_ARCHON->Security->Session->verifysession($session)){
         	        break;
         	        
        	  	   	case 'levelcontainers';
-       	         	echo json_encode(array_slice($_ARCHON->getAllLevelContainers(),$start-1,100,true));
+						$arrLevelContainer = $_ARCHON->getAllLevelContainers();
+						array_walk($arrLevelContainer, 'RemoveContainer');
+       	         	echo json_encode(array_slice($arrLevelContainer,$start-1,100,true));
                 	break;
                 	
-            	case 'descriptiverules';
+            	/*case 'descriptiverules';
                 	echo json_encode(array_slice($_ARCHON->getAllDescriptiveRules(),$start-1,100,true));
-                	break;
+                	break;*/
                 	
             	case 'usergroups';
 					$arrusergroups = $_ARCHON->getAllUsergroups();
@@ -48,7 +54,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                 	break;        	
         
             	default;
-       				echo ("enum_type not found.  Allowed values:'creatorsources', 'extentunits', 'filetypes', 'materialtypes', 'levelcontainers', 'descriptiverules', 'usergroups', and 'subjectsources'.  Please try again.");   
+       				echo ("enum_type not found.  Allowed values:'creatorsources', 'extentunits', 'filetypes', 'materialtypes', 'levelcontainers','usergroups', and 'subjectsources'.  Please try again.");   
 					break;			
 			}	
 			 			
@@ -79,6 +85,20 @@ function RemoveUserGroupElements($item, $key){
 	unset($item->DefaultPermissionsFullControl);
 	unset($item->Users);	
 }
+function RemoveCreatorElements($item,$key){
+	unset($item->Citation);
+	unset($item->Description); 
+}
+
+function RemoveContainer($item,$key){
+	unset($item->PrimaryEADLevel);
+	unset($item->GlobalNumbering);
+}
 
 
+function RemoveFiletypes($item,$key){
+	unset($item->MediaType);
+	unset($item->ToStringFields);
+
+}
 ?>

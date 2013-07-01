@@ -7,13 +7,12 @@ isset($_ARCHON) or die();
 //echo print_r($_ARCHON->AdministrativeInterface);
 //echo print_r($_REQUEST);
 
-// echo print_r($arrCountries);
 
 
 $session= $_SERVER['HTTP_SESSION'];
 if ($_ARCHON->Security->Session->verifysession($session)){
 
-    if ($_REQUEST['batch_start']){
+    if (isset($_REQUEST['batch_start'])){
 
             //Handles the zero condition
             $start = ( $_REQUEST['batch_start'] < 1 ? 1: $_REQUEST['batch_start']);
@@ -28,7 +27,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 
 
 
-            $arrCollectionbatch=(array_slice($_ARCHON->getAllCollections(),$start-1,100,true));
+            $arrCollectionbatch=(array_slice(RemoveBad($_ARCHON->getAllCollections()),$start-1,100,true));
 
             //Creators
             $arrCollectionCreator = getCollectioncreators();
@@ -37,7 +36,10 @@ if ($_ARCHON->Security->Session->verifysession($session)){
             {
                 if(array_key_exists($CollectionRelatedObject['CollectionID'],$arrCollectionbatch)){
                     $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->Creators[] = $CollectionRelatedObject['CreatorID'];
-                   
+                   if($CollectionRelatedObject['PrimaryCreator'] ==1){
+						$arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->PrimaryCreator= $CollectionRelatedObject['CreatorID'];
+				   
+				   }
                 }
             }
             //Creators
@@ -59,6 +61,10 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 
             foreach ($arrCollectionlocations as $CollectionRelatedObject)
             {
+				/*unset($CollectionRelatedObject['LocationID']);
+				unset($CollectionRelatedObject['Location']);
+				unset($CollectionRelatedObject['Description']);*/
+				
                 if(array_key_exists($CollectionRelatedObject['CollectionID'],$arrCollectionbatch)){
                     $arrcreaterel = $CollectionRelatedObject;
                     $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->LocationEntries[] = array_slice($arrcreaterel,1);
@@ -80,7 +86,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
             }
 
 
-             echo json_encode(array_values($arrCollectionbatch));
+             echo json_encode(($arrCollectionbatch));
         }
         else
         {
@@ -97,7 +103,7 @@ function getCollectioncreators()
     global $_ARCHON;
 
 
-    $query = "SELECT CollectionID,CreatorID FROM tblCollections_CollectionCreatorIndex";
+    $query = "SELECT CollectionID,CreatorID,PrimaryCreator FROM tblCollections_CollectionCreatorIndex";
     $result = $_ARCHON->mdb2->query($query);
 
 
@@ -180,9 +186,6 @@ function getCollectionlocations()
 
     $query = "SELECT
                  CollectionID,
-                LocationID,
-                Location,
-                Description,
                 RepositoryLimit,
                 Content,
                 Shelf,
@@ -211,6 +214,37 @@ function getCollectionlocations()
     $result->free();
 
     return $arrCollectionlocations;
+
+
+
+}
+function RemoveBad($CollectionFields) {
+    
+	array_walk($CollectionFields, 'Removefield');		
+    return $CollectionFields;
+}
+
+function Removefield($item,$key){
+	unset($item->AcquisitionDateMonth);
+	unset($item->AcquisitionDateDay);
+	unset($item->AcquisitionDateYear);
+	unset($item->PublicationDateMonth);
+	unset($item->PublicationDateDay);
+	unset($item->PublicationDateYear);
+	unset($item->Languages);
+	unset($item->Books);
+	unset($item->Repository);
+	unset($item->Classification);
+	unset($item->ExtentUnit);
+	unset($item->MaterialType);
+	unset($item->FindingLanguage);
+	unset($item->DescriptiveRules);
+	unset($item->PrimaryCreators);
+	unset($item->ToStringFields);
+	unset($item->ignoreCart);
+	unset($item->DigitalContent);
+
+
 
 
 
