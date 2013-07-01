@@ -3,12 +3,6 @@ header('Content-Type: application/json');
 
 isset($_ARCHON) or die();
 
-//echo print_r($_ARCHON) ;
-//echo print_r($_ARCHON->AdministrativeInterface);
-//echo print_r($_REQUEST);
-
-
-
 $session= $_SERVER['HTTP_SESSION'];
 if ($_ARCHON->Security->Session->verifysession($session)){
 
@@ -17,15 +11,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
             //Handles the zero condition
             $start = ( $_REQUEST['batch_start'] < 1 ? 1: $_REQUEST['batch_start']);
 
-
-
-
-
             // pulls Batches of 100 across
-
-
-
-
 
             $arrCollectionbatch=(array_slice(RemoveBad($_ARCHON->getAllCollections()),$start-1,100,true));
 
@@ -42,9 +28,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 				   }
                 }
             }
-            //Creators
-            //Subjects
 
+            //Subjects
             $arrCollectionSubjects= getCollectionSubjects();
 
             foreach ($arrCollectionSubjects as $CollectionRelatedObject)
@@ -54,7 +39,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 
                 }
             }
-            //Subjects
+            
             //Locations
 
             $arrCollectionlocations = getCollectionlocations();
@@ -71,21 +56,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 
                 }
             }
-            //Locations
-
-            //DigitalObjects
-
-            $arrCollectionDigitalContentIDs =  getCollectionDigitalContentIDs();
-
-            foreach ($arrCollectionCreator as $CollectionRelatedObject)
-            {
-                if(array_key_exists($CollectionRelatedObject['CollectionID'],$arrCollectionbatch)){
-                    $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->DigitalContent[] = $CollectionRelatedObject['ID'];
-
-                }
-            }
-
-
+            
              echo json_encode(($arrCollectionbatch));
         }
         else
@@ -122,36 +93,8 @@ function getCollectioncreators()
 
     return $arrCollectionCreators;
 
-
-
 }
-function getCollectionDigitalContentIDs()
-{
-    global $_ARCHON;
 
-
-    $query = "SELECT CollectionID,ID FROM tblDigitalLibrary_DigitalContent";
-    $result = $_ARCHON->mdb2->query($query);
-
-
-    if(PEAR::isError($result))
-    {
-        trigger_error($result->getMessage(), E_USER_ERROR);
-    }
-
-    while($row = $result->fetchRow())
-    {
-        $arrCollectionDigitalContentIDs [] = $row;
-
-    }
-
-    $result->free();
-
-    return $arrCollectionDigitalContentIDs;
-
-
-
-}
 function getCollectionSubjects()
 {
     global $_ARCHON;
@@ -175,23 +118,21 @@ function getCollectionSubjects()
     $result->free();
 
     return $arrCollectionSubjects;
-
-
-
 }
+
 function getCollectionlocations()
 {
     global $_ARCHON;
 
 
     $query = "SELECT
-                 CollectionID,
-                RepositoryLimit,
+                CollectionID,
+                Location,
                 Content,
-                Shelf,
-                Extent,
-                Section,
                 RangeValue,
+                Section,
+            	Shelf,
+                Extent,
                 ExtentUnitID
                 FROM
                 tblCollections_Locations
@@ -208,16 +149,14 @@ function getCollectionlocations()
     while($row = $result->fetchRow())
     {
         $arrCollectionlocations [] = $row;
-
     }
 
     $result->free();
 
     return $arrCollectionlocations;
 
-
-
 }
+
 function RemoveBad($CollectionFields) {
     
 	array_walk($CollectionFields, 'Removefield');		
@@ -231,6 +170,7 @@ function Removefield($item,$key){
 	unset($item->PublicationDateMonth);
 	unset($item->PublicationDateDay);
 	unset($item->PublicationDateYear);
+	unset($item->Content);
 	unset($item->Languages);
 	unset($item->Books);
 	unset($item->Repository);
@@ -243,13 +183,7 @@ function Removefield($item,$key){
 	unset($item->ToStringFields);
 	unset($item->ignoreCart);
 	unset($item->DigitalContent);
-
-
-
-
-
+	
 }
-
-
 
 ?>
