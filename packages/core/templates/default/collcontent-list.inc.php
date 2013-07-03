@@ -46,8 +46,6 @@ function loadCollectionContent($start){
     $cid = $_REQUEST['cid'];
 
 
-
-
     $objCollection = New Collection($_REQUEST['cid']);
     //echo print_r($objCollection);
     $objCollection->dbLoadContentjson();  //optional parameter limits to only one root node
@@ -55,7 +53,7 @@ function loadCollectionContent($start){
     $arrContent[]= array_slice($objCollection->Content,$start-1,100,true);
     $arrDisplay[]= array();
 
-    foreach ( $arrContent as $contentObj)
+    foreach ($arrContent as $contentObj)
     {
         if ($contentObj['ParentID'] == 0)
         {// Top Node Loaded first
@@ -89,19 +87,21 @@ function RemoveBad($CollectionContent) {
 
 function Removefield($item,$key){
     unset($item->Collection);
-
+    unset($item->LevelContainer);
     unset($item->Content);
-
-
+    unset($item->DigitalContent);
+    unset($item->ToStringFields);
+    
     if (isset($item->UserFields)){
          foreach ($item->UserFields as $UserField){
-
               unset($UserField->ContentID);
+              unset($UserField->ToStringFields);
+              unset($UserField->Content);	     
+              $UserField->NoteType = $UserField->EADElement->EADTag;
+        	  unset($UserField->EADElementID);
+        	  unset($UserField->EADElement);
          }
-
     }
-
-
 }
 
 

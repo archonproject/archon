@@ -214,6 +214,14 @@ function RemoveBad($AccessionContent) {
 
 function Removefield($item,$key){
     unset($item->ReceivedExtentUnit);
+	unset($item->UnprocessedExtentUnit);    
+	unset($item->ProcessingPriority);
+	unset($item->AccessionDateMonth);
+	unset($item->AccessionDateDay);
+	unset($item->AccessionDateYear);
+	unset($item->ExpectedCompletionDateMonth);
+	unset($item->ExpectedCompletionDateDay);
+	unset($item->ExpectedCompletionDateYear);
     unset($item->MaterialType);
     unset($item->PrimaryCollectionEntry);
     unset($item->ToStringFields);

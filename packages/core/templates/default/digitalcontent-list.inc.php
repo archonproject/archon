@@ -212,7 +212,6 @@ function Removefield($item,$key)
     unset($item->Collection);
     unset($item->CollectionContent);
     unset($item->Files);
-    unset($item->PrimaryCreator);
     unset($item->ToStringFields);
 
 }
