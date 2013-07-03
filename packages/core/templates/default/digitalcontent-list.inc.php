@@ -60,8 +60,21 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                     }
                 }
                  //Files
+            //Languages
+            $arrAllLanguages = $_ARCHON->getAllLanguages();
+            $arrDCLanguages= getDigitalContentLanguage();
+            foreach ($arrDCLanguages as $DCRelatedObject)
+            {
+                if(array_key_exists($DCRelatedObject['DigitalContentID'],$arrDigitalContentbatch)){
 
-                     echo json_encode(array_values($arrDigitalContentbatch));
+
+                    $arrcreaterel = $arrAllLanguages[$DCRelatedObject['LanguageID']]->LanguageShort;
+                    $arrDigitalContentbatch[$DCRelatedObject['DigitalContentID']]->Languages[] = $arrcreaterel;
+
+                }
+            }
+
+                     echo json_encode(Removebad($arrDigitalContentbatch));
         }else{
             echo "batch_start Not found! Please enter a batch_start and resubmit the request.";
 
@@ -156,5 +169,52 @@ function getDigitalContentFile()
 
 }
 
+function getDigitalContentLanguage()
+{
+    global $_ARCHON;
+
+
+    $query = "SELECT DigitalContentID,LanguageID FROM tblDigitalLibrary_DigitalContentLanguageIndex";
+    $result = $_ARCHON->mdb2->query($query);
+
+
+    if(PEAR::isError($result))
+    {
+        trigger_error($result->getMessage(), E_USER_ERROR);
+    }
+
+    while($row = $result->fetchRow())
+    {
+        $arrDigitalContentLanguage [] = $row;
+
+    }
+
+    $result->free();
+
+    return $arrDigitalContentLanguage;
+
+
+
+}
+
+function RemoveBad($digitalContent)
+{
+    array_walk_recursive ($digitalContent, 'Removefield');
+
+    return $digitalContent;
+}
+
+
+function Removefield($item,$key)
+{
+
+
+    unset($item->Collection);
+    unset($item->CollectionContent);
+    unset($item->Files);
+    unset($item->PrimaryCreator);
+    unset($item->ToStringFields);
+
+}
 
 ?>

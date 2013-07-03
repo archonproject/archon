@@ -18,7 +18,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
             if ($_REQUEST['batch_start']){
                 $start = ( $_REQUEST['batch_start'] < 1 ? 1: $_REQUEST['batch_start']);
                 $arrout=loadCollectionContent($start);
-              echo json_encode(($arrout));
+                 echo json_encode(RemoveBad($arrout));
+
             }
             else
             {
@@ -78,5 +79,30 @@ function loadCollectionContent($start){
 return array_values($arrDisplay);
 
 }
+
+function RemoveBad($CollectionContent) {
+
+    array_walk_recursive ($CollectionContent, 'Removefield');
+
+    return $CollectionContent;
+}
+
+function Removefield($item,$key){
+    unset($item->Collection);
+
+    unset($item->Content);
+
+
+    if (isset($item->UserFields)){
+         foreach ($item->UserFields as $UserField){
+
+              unset($UserField->ContentID);
+         }
+
+    }
+
+
+}
+
 
 ?>

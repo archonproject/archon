@@ -73,7 +73,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                  //Locations
 
 
-                     echo json_encode(array_values($arrAccessionbatch));
+                     echo json_encode(RemoveBad($arrAccessionbatch));
        }else{
                 echo "batch_start Not found! Please enter a batch_start and resubmit the request.";
 
@@ -174,7 +174,6 @@ function getAccessionlocations()
     $query = "SELECT
                 AccessionID,
                 Location,
-                Description,
                 Content,
                 RangeValue,
                 Section,
@@ -206,5 +205,18 @@ function getAccessionlocations()
 
 }
 
+function RemoveBad($AccessionContent) {
+
+    array_walk_recursive ($AccessionContent, 'Removefield');
+
+    return $AccessionContent;
+}
+
+function Removefield($item,$key){
+    unset($item->ReceivedExtentUnit);
+    unset($item->MaterialType);
+    unset($item->PrimaryCollectionEntry);
+    unset($item->ToStringFields);
+}
 
 ?>
