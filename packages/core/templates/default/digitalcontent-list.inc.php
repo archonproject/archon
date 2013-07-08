@@ -31,10 +31,17 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                  //Creators
                 $arrDigitalContentCreator = getDigitalContentCreator ();
 
-                foreach ($arrDigitalContentCreator as $accessionRelatedObject)
+                foreach ($arrDigitalContentCreator as $DigitalRelatedObject)
                 {
-                    if(array_key_exists($accessionRelatedObject['DigitalContentID'],$arrDigitalContentbatch)){
-                    $arrDigitalContentbatch[$accessionRelatedObject['DigitalContentID']]->Creators[] = $accessionRelatedObject['CreatorID'];
+                    if(array_key_exists($DigitalRelatedObject['DigitalContentID'],$arrDigitalContentbatch)){
+                    $arrDigitalContentbatch[$DigitalRelatedObject['DigitalContentID']]->Creators[] = $DigitalRelatedObject['CreatorID'];
+
+                        if($DigitalRelatedObject['PrimaryCreator'] == 1){
+
+                            $arrDigitalContentbatch[$DigitalRelatedObject['DigitalContentID']]->PrimaryCreator = $DigitalRelatedObject['CreatorID'];
+
+                        }
+
                     }
                 }
                 //Creators
@@ -91,7 +98,7 @@ function getDigitalContentCreator()
     global $_ARCHON;
 
 
-    $query = "SELECT DigitalContentID,CreatorID FROM tblDigitalLibrary_DigitalContentCreatorIndex";
+    $query = "SELECT DigitalContentID,CreatorID,PrimaryCreator FROM tblDigitalLibrary_DigitalContentCreatorIndex";
     $result = $_ARCHON->mdb2->query($query);
 
 
@@ -212,6 +219,7 @@ function Removefield($item,$key)
     unset($item->Collection);
     unset($item->CollectionContent);
     unset($item->Files);
+   // unset($item->PrimaryCreator);
     unset($item->ToStringFields);
 
 }

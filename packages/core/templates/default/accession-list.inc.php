@@ -46,6 +46,10 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                 {
                     if(array_key_exists($accessionRelatedObject['AccessionID'],$arrAccessionbatch)){
                     $arrAccessionbatch[$accessionRelatedObject['AccessionID']]->Creators[] = $accessionRelatedObject['CreatorID'];
+
+                        if($accessionRelatedObject['PrimaryCreator'] ==1){
+                            $arrAccessionbatch[$accessionRelatedObject['AccessionID']]->PrimaryCreator= $accessionRelatedObject['CreatorID'];
+                        }
                     }
                 }
                 //Creators
@@ -90,7 +94,7 @@ function getAccessioncreators()
     global $_ARCHON;
 
 
-    $query = "SELECT AccessionID,CreatorID FROM tblAccessions_AccessionCreatorIndex";
+    $query = "SELECT AccessionID,CreatorID,PrimaryCreator FROM tblAccessions_AccessionCreatorIndex";
     $result = $_ARCHON->mdb2->query($query);
 
 
@@ -214,14 +218,6 @@ function RemoveBad($AccessionContent) {
 
 function Removefield($item,$key){
     unset($item->ReceivedExtentUnit);
-	unset($item->UnprocessedExtentUnit);    
-	unset($item->ProcessingPriority);
-	unset($item->AccessionDateMonth);
-	unset($item->AccessionDateDay);
-	unset($item->AccessionDateYear);
-	unset($item->ExpectedCompletionDateMonth);
-	unset($item->ExpectedCompletionDateDay);
-	unset($item->ExpectedCompletionDateYear);
     unset($item->MaterialType);
     unset($item->PrimaryCollectionEntry);
     unset($item->ToStringFields);
