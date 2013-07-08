@@ -40,22 +40,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                 }
             }
             
-            //Locations
-
-            $arrCollectionlocations = getCollectionlocations();
-
-                   foreach ($arrCollectionlocations as $CollectionRelatedObject)
-        {
-            /*unset($CollectionRelatedObject['LocationID']);
-            unset($CollectionRelatedObject['Location']);
-            unset($CollectionRelatedObject['Description']);*/
-
-            if(array_key_exists($CollectionRelatedObject['CollectionID'],$arrCollectionbatch)){
-                $arrcreaterel = $CollectionRelatedObject;
-                $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->LocationEntries[] = array_slice($arrcreaterel,1);
-
-            }
-        }
+           
             //Languages
         $arrAllLanguages = $_ARCHON->getAllLanguages();
         $arrCollectionLanguages= getCollectionLanguages();
@@ -69,6 +54,22 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 
             }
         }
+
+
+ //Locations
+
+            $arrCollectionlocations = getCollectionlocations();
+
+                   foreach ($arrCollectionlocations as $CollectionRelatedObject)
+        {
+          
+            if(array_key_exists($CollectionRelatedObject['CollectionID'],$arrCollectionbatch)){
+                $arrcreaterel = $CollectionRelatedObject;
+                $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->Locations[] = array_slice($arrcreaterel,1);
+
+            }
+        }
+
 
         echo json_encode(($arrCollectionbatch));
         }
@@ -133,6 +134,32 @@ function getCollectionSubjects()
     return $arrCollectionSubjects;
 }
 
+function getCollectionLanguages()
+{
+    global $_ARCHON;
+
+
+    $query = "SELECT CollectionID,LanguageID FROM tblCollections_CollectionLanguageIndex";
+    $result = $_ARCHON->mdb2->query($query);
+
+
+    if(PEAR::isError($result))
+    {
+        trigger_error($result->getMessage(), E_USER_ERROR);
+    }
+
+    while($row = $result->fetchRow())
+    {
+        $arrCollectionLanguages [] = $row;
+
+    }
+
+    $result->free();
+
+    return $arrCollectionLanguages;
+}
+
+
 function getCollectionlocations()
 {
     global $_ARCHON;
@@ -169,30 +196,7 @@ function getCollectionlocations()
     return $arrCollectionlocations;
 
 }
-function getCollectionLanguages()
-{
-    global $_ARCHON;
 
-
-    $query = "SELECT CollectionID,LanguageID FROM tblCollections_CollectionLanguageIndex";
-    $result = $_ARCHON->mdb2->query($query);
-
-
-    if(PEAR::isError($result))
-    {
-        trigger_error($result->getMessage(), E_USER_ERROR);
-    }
-
-    while($row = $result->fetchRow())
-    {
-        $arrCollectionLanguages [] = $row;
-
-    }
-
-    $result->free();
-
-    return $arrCollectionLanguages;
-}
 
 function RemoveBad($CollectionFields) {
     
@@ -220,7 +224,7 @@ function Removefield($item,$key){
 	unset($item->ToStringFields);
 	unset($item->ignoreCart);
 	unset($item->DigitalContent);
-	
+	unset($item->LocationEntries);
 }
 
 ?>

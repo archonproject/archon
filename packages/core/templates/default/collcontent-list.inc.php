@@ -171,20 +171,25 @@ function RemoveBad($CollectionContent) {
 
 function Removefield($item,$key){
     unset($item->Collection);
-
+    unset($item->LevelContainer);
+    unset($item->Parent);
     unset($item->Content);
-
-
+    unset($item->DigitalContent);
+    unset($item->ToStringFields);
+    
     if (isset($item->UserFields)){
          foreach ($item->UserFields as $UserField){
-
               unset($UserField->ContentID);
+              unset($UserField->ToStringFields);
+              unset($UserField->Content);	     
+              $UserField->NoteType = $UserField->EADElement->EADTag;
+        	  unset($UserField->EADElementID);
+        	  unset($UserField->EADElement);
          }
-
+    $item->Notes = $item->UserFields;
+    unset($item->UserFields);
     }
 
-
 }
-
 
 ?>

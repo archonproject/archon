@@ -10,7 +10,6 @@ if ($_ARCHON->Security->Session->verifysession($session)){
  			$enumtype =$_REQUEST['enum_type'];
  			
  			
- 		
  		  switch ($enumtype) {
             	
             	case 'creatorsources';
@@ -22,6 +21,12 @@ if ($_ARCHON->Security->Session->verifysession($session)){
             	case 'extentunits';
                 	echo json_encode(array_slice($_ARCHON->getAllExtentUnits(),$start-1,100,true));
                 	break; 
+		
+				case 'processingpriorities';
+					$arrprocessingpriorities = $_ARCHON->getAllProcessingPriorities();
+					array_walk($arrprocessingpriorities,'RemoveProcessingPriorities');
+         	       echo json_encode(array_slice($arrprocessingpriorities,$start-1,100,true));
+         	       break;
 		
          	 	case 'filetypes';
 					$arrfiletypes = $_ARCHON->getAllFileTypes();
@@ -101,4 +106,12 @@ function RemoveFiletypes($item,$key){
 	unset($item->ToStringFields);
 
 }
+
+function RemoveProcessingPriorities($item,$key){
+	unset($item->Description);
+	unset($item->DisplayOrder);
+	unset($item->ToStringFields);
+
+}
+
 ?>
