@@ -16,7 +16,7 @@ $TemplateIndex['Collectioncontentlist'] = 'collcontent-list.inc.php';
 $TemplateIndex['Accessionlist'] = 'accession-list.inc.php';
 $TemplateIndex['DigitalContentlist'] = 'digitalcontent-list.inc.php';
 $TemplateIndex['Digitalfilelist'] = 'digitalfile-list.inc.php';
-
+$TemplateIndex['Digitalfileblob'] = 'digitalfileblob.inc.php';
 $TemplateIndex['SearchTitle'] = 'search-title.inc.php';
 
 
