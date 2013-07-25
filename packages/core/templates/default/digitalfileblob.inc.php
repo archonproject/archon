@@ -21,8 +21,9 @@ if ($_ARCHON->Security->Session->verifysession($session)){
            // echo print_r(base64_encode($arrfileblob[0]['FileContents']));
                     if (isset($arrfileblob)){
                         $arrfileblob =array_values($arrfileblob);
-                        $arrfileblob[0]['FileContents']=base64_encode($arrfileblob[0]['FileContents']);
-                       echo json_encode(array_values($arrfileblob));
+                       // $arrfileblob[0]['FileContents']=base64_encode($arrfileblob[0]['FileContents']);
+                       //echo json_encode(array_values($arrfileblob));
+                        echo print $arrfileblob[0]['FileContents'];
                     }
                     else {
 
