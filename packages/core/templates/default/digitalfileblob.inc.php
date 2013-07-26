@@ -1,20 +1,12 @@
 <?php
-header('Content-Type: application/json');
+//header('Content-Type: application/json');
 isset($_ARCHON) or die();
-
-//echo print_r($_REQUEST) ;
-//echo print_r($_ARCHON);
-
-
-// echo print_r($arrCountries);
 
 $session= $_SERVER['HTTP_SESSION'];
 if ($_ARCHON->Security->Session->verifysession($session)){
 
 //Handles the zero condition
     if (isset($_REQUEST['fileid'])){
-
-
 
         $arrfileblob = (getfileblobbyID());
 
@@ -31,6 +23,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                     }
 
         }else{
+			header('HTTP/1.0 400 Bad Request');
+				
             echo "fileid  Not found! Please enter a fileid and resubmit the request.";
 
         }
@@ -38,6 +32,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 
 
 } else {
+	header('HTTP/1.0 400 Bad Request');
+				
     echo "Please submit your admin credentials to p=core/authenticate";
 }
 

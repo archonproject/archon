@@ -8,7 +8,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 
     if ($_REQUEST['cid']){
 	
-            if ($_REQUEST['batch_start']){
+            if (isset($_REQUEST['batch_start'])){
                 $start = ( $_REQUEST['batch_start'] < 1 ? 1: $_REQUEST['batch_start']);
                 $arrout=loadCollectionContent($start);
                 header('HTTP/1.0 200 Created');
@@ -65,6 +65,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 	header('HTTP/1.0 401 Unauthorized');
     echo "Please submit your admin credentials to p=core/authenticate";
 }
+
+//FUNCTIONS
 
 function loadCollectionContent($start){
 
@@ -158,11 +160,10 @@ function normalize($item,$key){
 	if (isset($item->LevelContainer)) {
 	
 	
- 		$item->IsIntellectual = $item->LevelContainer->IntellectualLevel ;
- 		$item->IsPhysical = $item->LevelContainer->PhysicalContainer ;
+ 		//$item->IsIntellectual = $item->LevelContainer->IntellectualLevel ;
+ 		//$item->IsPhysical = $item->LevelContainer->PhysicalContainer ;
  		
- 		
- 		
+
  		if ($item->LevelContainer->IntellectualLevel == "1" && $item->LevelContainer->PhysicalContainer== "0") {
 		$item->ContentType = "IntellectualLevel";
 		}
@@ -181,7 +182,7 @@ function normalize($item,$key){
 			$item->EADLevel = "";
       		$item->OtherLevel = "";
 			$item->ContainerType = $item->LevelContainer->LevelContainer;
-			$item->ContainerIndicator = $item->LevelContainterIdentifier ;
+			$item->ContainerIndicator = $item->LevelContainerIdentifier ;
 		}
 		
 		else			//expose only levels of description if intellectual is true and physical is false, otherwise, expose everything

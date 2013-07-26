@@ -2,31 +2,26 @@
 header('Content-Type: application/json');
 isset($_ARCHON) or die();
 
-//echo print_r($_REQUEST) ;
-//echo print_r($_ARCHON);
-
-
-// echo print_r($arrCountries);
-
 $session= $_SERVER['HTTP_SESSION'];
 if ($_ARCHON->Security->Session->verifysession($session)){
 
 //Handles the zero condition
-       if ($_REQUEST['batch_start']){
+       if (isset($_REQUEST['batch_start'])){
                 $start = ( $_REQUEST['batch_start'] < 1 ? 1: $_REQUEST['batch_start']);
-
                 // pulls Batches of 100 across
 
                 $SearchFlags = $in_SearchFlags ? $in_SearchFlags : SEARCH_ACCESSIONS;
 
                 $arrAccessions = $_ARCHON->searchAccessions('', $SearchFlags, 0, $objCollection->ID);
-                //echo  print_r($arrAccessions);
-
-
+                
+				header('HTTP/1.0 200 Created');
+								
 
                 $arrAccessionbatch = (array_slice($arrAccessions,$start-1,100,true));
 
-
+				if (empty($arrAccessionbatch)) {
+					exit ("No matching record(s) found for batch_start=".$_REQUEST['batch_start']);
+				}
 
                 //Collections and Classifications
                 $arrAccessionCollection = getAccessioncollections();
@@ -80,15 +75,17 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 
                      echo json_encode(RemoveBad($arrAccessionbatch));
        }else{
+				header('HTTP/1.0 400 Bad Request');
                 echo "batch_start Not found! Please enter a batch_start and resubmit the request.";
 
        }
 
-
-
 } else {
     echo "Please submit your admin credentials to p=core/authenticate";
 }
+
+
+//Functions
 
 function getAccessioncreators()
 {
@@ -113,10 +110,8 @@ function getAccessioncreators()
     $result->free();
 
     return $arraccessCreators;
-
-
-
 }
+
 function getAccessioncollections()
 {
     global $_ARCHON;

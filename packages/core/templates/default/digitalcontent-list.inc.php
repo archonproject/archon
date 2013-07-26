@@ -2,31 +2,21 @@
 header('Content-Type: application/json');
 isset($_ARCHON) or die();
 
-//echo print_r($_REQUEST) ;
-//echo print_r($_ARCHON);
-
-
-// echo print_r($arrCountries);
-
 $session= $_SERVER['HTTP_SESSION'];
 if ($_ARCHON->Security->Session->verifysession($session)){
 
 //Handles the zero condition
-        if ($_REQUEST['batch_start']){
+        if (isset($_REQUEST['batch_start'])){
                 $start = ( $_REQUEST['batch_start'] < 1 ? 1: $_REQUEST['batch_start']);
 
         // pulls Batches of 100 across
 
-
-                $arrDigitalContent = $_ARCHON->getAllDigitalContent();
-
-        //echo  print_r($arrAccessions);
-
-
-
+                $arrDigitalContent = $_ARCHON->getAllDigitalContent();        
                 $arrDigitalContentbatch = (array_slice($arrDigitalContent,$start-1,100,true));
-
-
+				header('HTTP/1.0 200 Created');				
+				if (empty($arrDigitalContentbatch)) {
+					exit ("No matching record(s) found for cid=".$_REQUEST['cid']." and batch_start=".$_REQUEST['batch_start']);
+				}
 
                  //Creators
                 $arrDigitalContentCreator = getDigitalContentCreator ();
@@ -39,12 +29,9 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                         if($DigitalRelatedObject['PrimaryCreator'] == 1){
 
                             $arrDigitalContentbatch[$DigitalRelatedObject['DigitalContentID']]->PrimaryCreator = $DigitalRelatedObject['CreatorID'];
-
                         }
-
                     }
                 }
-                //Creators
                 //Subjects
 
                 $arrDigitalContentSubjects= getDigitalContentSubjects();
@@ -55,9 +42,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                     $arrDigitalContentbatch[$accessionRelatedObject['DigitalContentID']]->Subjects[] = $accessionRelatedObject['SubjectID'];
                     }
                 }
-                //Subjects
+               
                 //Files
-
                 $arrDigitalContentFiles = getDigitalContentFile();
 
                 foreach ($arrDigitalContentFiles as $accessionRelatedObject)
@@ -66,7 +52,6 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                     $arrDigitalContentbatch[$accessionRelatedObject['DigitalContentID']]->Files[] = $accessionRelatedObject['ID'];
                     }
                 }
-                 //Files
             //Languages
             $arrAllLanguages = $_ARCHON->getAllLanguages();
             $arrDCLanguages= getDigitalContentLanguage();
@@ -83,16 +68,21 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 
                      echo json_encode(Removebad($arrDigitalContentbatch));
         }else{
+			header('HTTP/1.0 400 Bad Request');
+				
             echo "batch_start Not found! Please enter a batch_start and resubmit the request.";
 
         }
 
+} 
 
-
-} else {
+else {
+	header('HTTP/1.0 400 Bad Request');
+				
     echo "Please submit your admin credentials to p=core/authenticate";
 }
 
+//FUNCTIONS
 function getDigitalContentCreator()
 {
     global $_ARCHON;

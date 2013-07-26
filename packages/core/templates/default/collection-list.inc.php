@@ -10,11 +10,15 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 
             //Handles the zero condition
             $start = ( $_REQUEST['batch_start'] < 1 ? 1: $_REQUEST['batch_start']);
-
+		
             // pulls Batches of 100 across
 
             $arrCollectionbatch=(array_slice(RemoveBad($_ARCHON->getAllCollections()),$start-1,100,true));
-
+			header('HTTP/1.0 200 Created');				
+			if (empty($arrCollectionbatch)) {
+				exit ("No matching record(s) found for batch_start=".$_REQUEST['batch_start']);
+			}
+			
             //Creators
             $arrCollectionCreator = getCollectioncreators();
 
@@ -75,8 +79,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
         }
         else
         {
+			header('HTTP/1.0 400 Bad Request');
             echo "batch_start  Not found! and  Please enter a batch_start and resubmit the request.";
-
         }
 
 
