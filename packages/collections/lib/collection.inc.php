@@ -927,18 +927,18 @@ abstract class Collections_Collection
 
 //      $_ARCHON->sortCollectionContentArray(&$this->Content);
         // Now we need to establish parent-child relationships
-      /*  foreach($this->Content as $ID => $objContent)
+        foreach($this->Content as $ID => $objContent)
         {
             $objContent->LevelContainer = $arrLevelContainers[$objContent->LevelContainerID];
             $objContent->Collection = $this;
 
-            if($objContent->ParentID)
+      /*      if($objContent->ParentID)
             {
                 $this->Content[$objContent->ParentID]->Content[$ID] = $objContent;
                 $objContent->Parent = $this->Content[$objContent->ParentID];
-            }
+            }*/
         }
-*/
+
         reset($this->Content);
         if(CONFIG_COLLECTIONS_ENABLE_USER_DEFINED_FIELDS)
         {
