@@ -190,8 +190,6 @@ function getDigitalContentLanguage()
 
     return $arrDigitalContentLanguage;
 
-
-
 }
 
 function RemoveBad($digitalContent)

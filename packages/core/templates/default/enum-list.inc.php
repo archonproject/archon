@@ -51,10 +51,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
         	        
        	  	   	case 'containertypes';
 				
-					//$arrEnum = $_ARCHON->getAllLevelContainers();
-					
-					$arrEnum = getcontainertypes();
-					
+					$arrEnum = getcontainertypes();		
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
 					array_walk($arrEnumbatch, 'RemoveContainerTypes');
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
@@ -81,7 +78,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
         
             	default;
 					
-       				echo ("enum_type not found.  Allowed values:'creatorsources', 'extentunits', 'filetypes', 'materialtypes', 'levelcontainers','usergroups', and 'subjectsources'.  Please try again.");   
+       				echo ("enum_type not found.  Allowed values:'namesources', 'extentunits', 'filetypes', 'materialtypes', 'levelcontainers','usergroups', and 'subjectsources'.  Please try again.");   
 					break;			
 			}	
 			 			
@@ -93,9 +90,11 @@ if ($_ARCHON->Security->Session->verifysession($session)){
     	}      
 } 
 else {
-header('HTTP/1.0 400 Bad Request');
+	header('HTTP/1.0 400 Bad Request');
     echo "Please submit your admin credentials to p=core/authenticate";
 }
+
+//FUNCTIONS
 
 function getcontainertypes()
 {
@@ -127,6 +126,7 @@ function RemoveUserGroups($item, $key){
 	unset($item->DefaultPermissionsFullControl);
 	unset($item->Users);	
 }
+
 function RemoveCreators($item,$key){
 	unset($item->Citation);
 	unset($item->Description); 

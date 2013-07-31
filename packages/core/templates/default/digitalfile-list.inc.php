@@ -32,7 +32,7 @@ function getDigitalContentFile()
 {
         global $_ARCHON;
 
-        $query = "SELECT     ID,
+        $query = "SELECT    ID,
                             DefaultAccessLevel as AccessLevel,
                             DigitalContentID,
                             Title,

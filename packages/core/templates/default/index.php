@@ -9,7 +9,6 @@ $TemplateIndex['Userlist'] = 'user-list.inc.php';
 $TemplateIndex['Subjectlist'] = 'subject-list.inc.php';
 $TemplateIndex['Enumlist'] = 'enum-list.inc.php';
 $TemplateIndex['Creatorslist'] = 'creators-list.inc.php';
-$TemplateIndex['Locationslist'] = 'locations-list.inc.php';
 $TemplateIndex['Classificationlist'] = 'classification-list.inc.php';
 $TemplateIndex['Collectionlist'] = 'collection-list.inc.php';
 $TemplateIndex['Collectioncontentlist'] = 'collcontent-list.inc.php';
@@ -18,8 +17,6 @@ $TemplateIndex['DigitalContentlist'] = 'digitalcontent-list.inc.php';
 $TemplateIndex['Digitalfilelist'] = 'digitalfile-list.inc.php';
 $TemplateIndex['Digitalfileblob'] = 'digitalfileblob.inc.php';
 $TemplateIndex['SearchTitle'] = 'search-title.inc.php';
-
-
 
 // Form sub-templates
 $TemplateIndex['FieldCategory'] = 'field-category.inc.php'; // Displays section headings within a form

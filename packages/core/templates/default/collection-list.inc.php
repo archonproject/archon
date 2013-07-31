@@ -59,7 +59,6 @@ if ($_ARCHON->Security->Session->verifysession($session)){
             }
         }
 
-
  //Locations
 
             $arrCollectionlocations = getCollectionlocations();
@@ -86,6 +85,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 
 } else {
     echo "Please submit your admin credentials to p=core/authenticate";}
+
+//FUNCTIONS
 
 function getCollectioncreators()
 {

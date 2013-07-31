@@ -23,13 +23,9 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                 foreach ($arrCollectionContentCreator as $CollectionContentRelatedObject)
                 {
                     extract($CollectionContentRelatedObject);
-
                     // Multi array  special process probably need to revisit
-
                     if(isset($arrout['0'][$CollectionContentID])){
-
                         $arrout['0'][$CollectionContentID]->Creators[] = $CollectionContentRelatedObject['CreatorID'];
-
                     }
                 }
 
@@ -40,14 +36,12 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                 {
                     extract($CollectionContentRelatedObject);
                     if (isset($arrout['0'][$CollectionContentID])){
-
                         $arrout['0'][$CollectionContentRelatedObject['CollectionContentID']]->Subjects[] = $CollectionContentRelatedObject['SubjectID'];
 
                     }
                 }
 				clean_up($arrout);
 				echo json_encode($arrout);
-
             }
             else
             {
@@ -159,21 +153,19 @@ function normalize($item,$key){
 
 	if (isset($item->LevelContainer)) {
 	
-	
  		//$item->IsIntellectual = $item->LevelContainer->IntellectualLevel ;
  		//$item->IsPhysical = $item->LevelContainer->PhysicalContainer ;
  		
-
  		if ($item->LevelContainer->IntellectualLevel == "1" && $item->LevelContainer->PhysicalContainer== "0") {
-		$item->ContentType = "IntellectualLevel";
+		$item->ContentType = "1";
 		}
 		
 		elseif($item->LevelContainer->IntellectualLevel == "0" && $item->LevelContainer->PhysicalContainer== "1") {
-		$item->ContentType = "PhysicalContainer";
+		$item->ContentType = "2";
 		}
 		
 		else  {
-		$item->ContentType = "BothIntellectualAndPhysical";
+		$item->ContentType = "3";
 		}
 
 		
@@ -181,11 +173,12 @@ function normalize($item,$key){
 			$item->UniqueID = "" ;
 			$item->EADLevel = "";
       		$item->OtherLevel = "";
-			$item->ContainerType = $item->LevelContainer->LevelContainer;
+      		$item->ContainerTypeID = $item->LevelContainerID;
+			//$item->ContainerType = $item->LevelContainer->LevelContainer;  //don't need the string value
 			$item->ContainerIndicator = $item->LevelContainerIdentifier ;
 		}
 		
-		else			//expose only levels of description if intellectual is true and physical is false, otherwise, expose everything
+		else			//expose ONLY levels of description if intellectual is true and physical is false, otherwise, expose everything
 		{
 			$item->UniqueID = $item->LevelContainer->LevelContainer . " " . $item->LevelContainerIdentifier ; 
       		$temp = strtolower($item->LevelContainer->EADLevel);
@@ -204,13 +197,15 @@ function normalize($item,$key){
 				}
 		
 			if (($item->LevelContainer->IntellectualLevel == "0" && $item->LevelContainer->PhysicalContainer == "0") || $item->LevelContainer->PhysicalContainer == "1") {  // plop in containter type in case of user error in not marking either physical or intellectual
-				$item->ContainerType = $item->LevelContainer->LevelContainer;
+				$item->ContainerTypeID = $item->LevelContainerID ;
+				//$item->ContainerType = $item->LevelContainer->LevelContainer ;  //don't need the string value
 				$item->ContainerIndicator = $item->LevelContainerIdentifier ;				
 			}
-			else  //leave containter type and indicator empty ONLY if intellectual is true and physical is false
+			else  //leave containter type id and indicator empty ONLY if intellectual is true and physical is false
 			{
-				$item->ContainerType = "";  
-				$item->ContainerIndicator ="";
+				$item->ContainerTypeID = "" ;
+				//$item->ContainerType = "" ;   //don't need the string value
+				$item->ContainerIndicator ="" ;
 			}
 		}	
 	}
@@ -223,8 +218,12 @@ function normalize($item,$key){
               unset($UserField->ToStringFields);
               unset($UserField->Content);	     
               $UserField->NoteType = $UserField->EADElement->EADTag;
+              $UserField->Label = $UserField->Title;
+              $UserField->Content = $UserField->Value;
         	  unset($UserField->EADElementID);
         	  unset($UserField->EADElement);
+        	  unset($UserField->Title);
+        	  unset($UserField->Value);
          }
     $item->Notes = $item->UserFields; 
     } 
@@ -238,6 +237,5 @@ function normalize($item,$key){
     unset($item->DigitalContent);
     unset($item->ToStringFields); 
 }
-
 
 ?>

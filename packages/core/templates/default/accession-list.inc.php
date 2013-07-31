@@ -72,20 +72,21 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                 }
                  //Locations
 
-
                      echo json_encode(RemoveBad($arrAccessionbatch));
-       }else{
+       }
+       else
+       {
 				header('HTTP/1.0 400 Bad Request');
                 echo "batch_start Not found! Please enter a batch_start and resubmit the request.";
 
        }
 
-} else {
+} else 
+{
     echo "Please submit your admin credentials to p=core/authenticate";
 }
 
-
-//Functions
+//FUNCTIONS
 
 function getAccessioncreators()
 {
@@ -163,13 +164,10 @@ function getAccessionSubjects()
 
     return $arrAccessSubjects;
 
-
-
 }
 function getAccessionlocations()
 {
     global $_ARCHON;
-
 
     $query = "SELECT
                 AccessionID,
@@ -194,14 +192,11 @@ function getAccessionlocations()
     while($row = $result->fetchRow())
     {
         $arrAccesslocations [] = $row;
-
     }
 
     $result->free();
 
     return $arrAccesslocations;
-
-
 
 }
 
