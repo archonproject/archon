@@ -142,6 +142,47 @@ abstract class Creators_Archon
    }
 
 
+  /**
+    * Retrieves all Creators from the database for JSON endpoint, ordered by ID
+    *
+    * If $MakeIntoIndex is false, the returned array of Creator objects
+    * is sorted by Creator and has IDs as keys.
+    *
+    * If $MakeIntoIndex is true, the returned array is a
+    * two dimensional array, with the first dimension indexed with
+    * 0 (representing numeric characters) and the lowercase characters a-z.
+    * Each of those arrays will contain a sorted set of Creator objects, with
+    * the Creator's IDs as keys.
+    *
+    * @param $MakeIntoIndex[optional]
+    * @return Creator[]
+*/
+ public function getAllCreatorsJSON($ReturnList = false, $OnlyToStringFields = false)
+   {
+      if($ReturnList)
+      {
+         return $this->loadObjectList("tblCreators_Creators", "Creator", "Name");
+      }
+      elseif($OnlyToStringFields)
+      {
+         $tmpCreator = new Creator;
+         $toStringFields = $tmpCreator->ToStringFields;
+         //loadTable($Table, $ClassName, $OrderBy = NULL, $Condition = NULL, $ConditionTypes = NULL, $ConditionVars = NULL, $NoMemoryCache = false, $SelectFields = array())
+         $arrCreators = $this->loadTable("tblCreators_Creators", "Creator", "ID", NULL, NULL, NULL, false, $toStringFields);
+      }
+      else
+      {
+         $arrCreators = $this->loadTable("tblCreators_Creators", "Creator", "ID");
+      }
+
+      return $arrCreators;
+
+   }
+
+
+
+
+
 
 
 
