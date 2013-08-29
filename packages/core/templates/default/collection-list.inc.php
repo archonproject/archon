@@ -74,7 +74,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
         }
 
 
-        echo json_encode(($arrCollectionbatch));
+        echo $_ARCHON->bbcode_to_html(json_encode(($arrCollectionbatch)));
         }
         else
         {

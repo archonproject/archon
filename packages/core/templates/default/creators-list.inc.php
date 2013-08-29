@@ -21,7 +21,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
             array_walk($arrCreators, 'GetRelatedCreators');
 			array_walk($arrCreators,'Removefield');
          
-			echo json_encode($arrCreators);
+			echo$_ARCHON->bbcode_to_html( json_encode($arrCreators));
         }
         else
         {

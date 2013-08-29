@@ -12,7 +12,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 		$arrSubj = $_ARCHON->getAllSubjectsforJSON();
 		$arrSubjBatch = array_slice($arrSubj,$start-1,100,true);
 		array_walk($arrSubjBatch, 'RemoveSubjElements');			
-		echo (empty($arrSubjBatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrSubjBatch));	
+		echo (empty($arrSubjBatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : $_ARCHON->bbcode_to_html(json_encode($arrSubjBatch)));
     } 
     else {
     	header('HTTP/1.0 400 Bad Request');

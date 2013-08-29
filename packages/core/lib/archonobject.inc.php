@@ -49,7 +49,35 @@ abstract class ArchonObject
 
       return $result;
    }
+    Public function bbcode_to_html($bbtext){
+        $bbtags = array(
 
+            '[b]' => "<span style='font-weight:bold'>","[\/b]" => "<\/span>",
+            '[i]' => "<span style='font-style:italic'>","[\/i]" => "<\/span>",
+            '[u]' => "<span style='text-decoration:underline'>","[\/u]" => "<\/span>",
+            '[sup]'=> "<span style='vertical-align:super;font-size:.8em'>","[\/sup]"=>"<\/span>",
+            '[sub]'=> "<span style='vertical-align:sub;font-size:.8em'>","[\/sub]"=>"<\/span>",
+
+        );
+
+        $bbtext = str_ireplace(array_keys($bbtags), array_values($bbtags), $bbtext);
+
+       $bbextended = array(
+
+
+           "/\[url=(http:\\\\\/\\\\\/.*?)\](.*?)\[\\\\\/url\]/i" => "<a href='$1'>$2<\\\\/a>",
+           "/\[url=(mailto:.*?)\](.*?)\[\\\\\/url\]/i" => "<a href='$1'>$2<\\\\/a>",
+           "/\[email=(.*?)\](.*?)\[\\\\\/email\]/i" => "<a href='$1'>$2<\\\\/a>",
+           "/\[mail=(.*?)\](.*?)\[\/mail\\\\\]/i" => "<a href='mailto:$1'>$2<\\\\/a>",
+
+        );
+
+        foreach($bbextended as $match=>$replacement){
+            //echo $match ."\n";
+            $bbtext = preg_replace($match, $replacement, $bbtext);
+        }
+        return $bbtext;
+    }
 
 
 

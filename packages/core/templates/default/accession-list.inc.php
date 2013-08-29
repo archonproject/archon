@@ -72,7 +72,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                 }
                  //Locations
 
-                     echo json_encode(RemoveBad($arrAccessionbatch));
+                     echo $_ARCHON->bbcode_to_html(json_encode(RemoveBad($arrAccessionbatch)));
        }
        else
        {
