@@ -187,8 +187,8 @@ function normalize($item,$key){
       			$item->EADLevel = "other level";
       			$item->OtherLevel = "undefined";
       			}
-      		elseif ($temp <> "series" && $temp <> "file" && $temp <> "sub-series" && $temp <> "item" && $temp <> "class" && $temp <> "collection" && $temp <> "fonds" && $temp <> "record group" && $temp <> "sub-fonds" && $temp <> "sub-group" && $temp <> "other level" && $temp <> "other_unmapped") {
-      			$item->EADLevel = "other level";
+      		elseif ($temp <> "series" && $temp <> "file" && $temp <> "subseries" && $temp <> "item" && $temp <> "class" && $temp <> "collection" && $temp <> "fonds" && $temp <> "recordgrp" && $temp <> "subfonds" && $temp <> "subgrp" && $temp <> "other level" && $temp <> "other_unmapped") {
+      			$item->EADLevel = "otherlevel";
       			$item->OtherLevel = strtolower($item->LevelContainer->EADLevel);
       			}  	
       		else {
