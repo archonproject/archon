@@ -52,11 +52,17 @@ abstract class ArchonObject
     Public function bbcode_to_html($bbtext){
         $bbtags = array(
 
-            '[b]' => "<span style='font-weight:bold'>","[\/b]" => "<\/span>",
-            '[i]' => "<span style='font-style:italic'>","[\/i]" => "<\/span>",
-            '[u]' => "<span style='text-decoration:underline'>","[\/u]" => "<\/span>",
-            '[sup]'=> "<span style='vertical-align:super;font-size:.8em'>","[\/sup]"=>"<\/span>",
-            '[sub]'=> "<span style='vertical-align:sub;font-size:.8em'>","[\/sub]"=>"<\/span>",
+            //'[b]' => "<span style='font-weight:bold'>","[\/b]" => "<\/span>",
+            //'[i]' => "<span style='font-style:italic'>","[\/i]" => "<\/span>",
+            //'[u]' => "<span style='text-decoration:underline'>","[\/u]" => "<\/span>",
+            //'[sup]'=> "<span style='vertical-align:super;font-size:.8em'>","[\/sup]"=>"<\/span>",
+            //'[sub]'=> "<span style='vertical-align:sub;font-size:.8em'>","[\/sub]"=>"<\/span>",
+
+			'[b]' => "<emph render='bold'>","[\/b]" => "</emph>",
+            '[i]' => "<emph render='italic'>","[\/i]" => "</emph>",
+            '[u]' => "<emph render='underline'>","[\/u]" => "</emph>",
+            '[sup]'=> "<emph render='super'>","[\/sup]"=>"</emph>",
+            '[sub]'=> "<emph render='sub'>","[\/sub]"=>"</emph>",
 
         );
 
@@ -65,8 +71,8 @@ abstract class ArchonObject
        $bbextended = array(
 
 
-           "/\[url=(http:\\\\\/\\\\\/.*?)\](.*?)\[\\\\\/url\]/i" => "<a href='$1'>$2<\\\\/a>",
-           "/\[url=(mailto:.*?)\](.*?)\[\\\\\/url\]/i" => "<a href='$1'>$2<\\\\/a>",
+           "/\[url=(http:\\\\\/\\\\\/.*?)\](.*?)\[\\\\\/url\]/i" => "<extref href='$1'>$2<\\\\/extref>",
+           "/\[url=(mailto:.*?)\](.*?)\[\\\\\/url\]/i" => "<extref='mailto:$1'>$2<\\\\/a>",
            "/\[email=(.*?)\](.*?)\[\\\\\/email\]/i" => "<a href='$1'>$2<\\\\/a>",
            "/\[mail=(.*?)\](.*?)\[\/mail\\\\\]/i" => "<a href='mailto:$1'>$2<\\\\/a>",
 
