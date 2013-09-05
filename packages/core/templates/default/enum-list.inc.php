@@ -15,6 +15,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
             	case 'creatorsources';
                     $arrEnum = $_ARCHON->getAllCreatorSources();
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
+					array_walk($arrEnumbatch, 'Normalize');
                     array_walk($arrEnumbatch, 'RemoveCreators');
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break;
@@ -23,6 +24,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 				
 				    $arrEnum = $_ARCHON->getAllExtentUnits();
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
+					array_walk($arrEnumbatch, 'Normalize');
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break; 
 		
@@ -30,6 +32,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 
 					$arrEnum = $_ARCHON->getAllProcessingPriorities();
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
+					array_walk($arrEnumbatch, 'Normalize');
                     array_walk($arrEnumbatch, 'RemoveProcessingPriorities');
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break;
@@ -38,6 +41,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 
 					$arrEnum = $_ARCHON->getAllFileTypes();
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
+					array_walk($arrEnumbatch, 'Normalize');
                     array_walk($arrEnumbatch, 'RemoveFileTypes');
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break;
@@ -46,6 +50,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 
 				    $arrEnum = $_ARCHON->getAllMaterialTypes();
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
+					array_walk($arrEnumbatch, 'Normalize');
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break; 
         	        
@@ -53,6 +58,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 				
 					$arrEnum = getcontainertypes();		
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
+					array_walk($arrEnumbatch, 'NormalizeArray');
 					array_walk($arrEnumbatch, 'RemoveContainerTypes');
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break; 
@@ -65,6 +71,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 				
 					$arrEnum = $_ARCHON->getAllUsergroups();
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
+					array_walk($arrEnumbatch, 'Normalize');
                     array_walk($arrEnumbatch, 'RemoveUserGroups');
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break;
@@ -73,12 +80,13 @@ if ($_ARCHON->Security->Session->verifysession($session)){
             	
 					$arrEnum = $_ARCHON->getAllSubjectSources();
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
+					array_walk($arrEnumbatch, 'Normalize');
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break;
         
             	default;
 					
-       				echo ("enum_type not found.  Allowed values:'namesources', 'extentunits', 'filetypes', 'materialtypes', 'levelcontainers','usergroups', and 'subjectsources'.  Please try again.");   
+       				echo ("enum_type not found.  Allowed values:'creatorsources', 'extentunits', 'filetypes', 'materialtypes', 'levelcontainers','usergroups', and 'subjectsources'.  Please try again.");   
 					break;			
 			}	
 			 			
@@ -95,6 +103,19 @@ else {
 }
 
 //FUNCTIONS
+
+
+function Normalize ($item, $key)
+
+{
+$item->ID = strval($item->ID);
+}
+
+function NormalizeArray (&$item, $key)
+
+{
+$item[ID] = strval($item[ID]);
+}
 
 function getcontainertypes()
 {

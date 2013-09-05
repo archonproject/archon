@@ -65,8 +65,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 
                 }
             }
-
-                     echo $_ARCHON->bbcode_to_html(json_encode(Removebad($arrDigitalContentbatch)));
+					 Normalize($arrDigitalContentbatch);
+                     echo $_ARCHON->bbcode_to_html(json_encode($arrDigitalContentbatch));
         }else{
 			header('HTTP/1.0 400 Bad Request');
 				
@@ -192,18 +192,36 @@ function getDigitalContentLanguage()
 
 }
 
-function RemoveBad($digitalContent)
+function Normalize($digitalContent)
 {
-    array_walk_recursive ($digitalContent, 'Removefield');
+    array_walk_recursive ($digitalContent, 'Normal');
 
     return $digitalContent;
 }
 
-
-function Removefield($item,$key)
+function Normal($item,$key)
 {
 
+	$item->ID = strval($item->ID);
+	$item->Browsable = strval($item->Browsable);
+	$item->CollectionID = strval($item->CollectionID);
+	$item->CollectionContentID = strval($item->CollectionContentID);
+	$item->HyperlinkURL = strval($item->HyperlinkURL);
+	
+	if (isset($item->Creators)){
+        foreach ($item->Creators as &$creator){  
+            $creator = strval($creator);
+         }
+        } 
 
+	if (isset($item->Subjects)){
+        foreach ($item->Subjects as &$subject){  
+            $subject = strval($subject);
+         }
+        } 
+	
+	$item->PrimaryCreator = strval($item->PrimaryCreator);
+	
     unset($item->Collection);
     unset($item->CollectionContent);
     unset($item->Files);

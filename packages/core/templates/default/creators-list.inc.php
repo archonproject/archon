@@ -19,9 +19,9 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 				}
 		    
             array_walk($arrCreators, 'GetRelatedCreators');
-			array_walk($arrCreators,'Removefield');
+			array_walk($arrCreators,'Normalize');
          
-			echo$_ARCHON->bbcode_to_html( json_encode($arrCreators));
+			echo ($_ARCHON->bbcode_to_html( json_encode($arrCreators)));
         }
         else
         {
@@ -58,8 +58,17 @@ function getRelatedCreators($item)
         $item->CreatorRelationships = $arrCreatorsrelated;
 }
 
-
-function Removefield($item,$key){
+function Normalize($item,$key){
+	if (isset($item->CreatorRelationships)){
+        foreach ($item->CreatorRelationships as &$rel){  
+            $rel[RelatedCreatorID] = strval($rel[RelatedCreatorID]);
+            $rel[CreatorRelationshipTypeID] = strval($rel[CreatorRelationshipTypeID]);
+         }
+        } 
+	$item->CreatorTypeID = strval($item->CreatorTypeID);
+	$item->CreatorSourceID = strval($item->CreatorSourceID);
+	$item->ID = strval($item->ID);
+	$item->RepositoryID = strval($item->RepositoryID);
 	unset($item->LanguageID);
 	unset($item->ScriptID);
 	unset($item->CreatorType);

@@ -71,8 +71,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                     }
                 }
                  //Locations
-
-                     echo $_ARCHON->bbcode_to_html(json_encode(RemoveBad($arrAccessionbatch)));
+					RemoveBad($arrAccessionbatch);
+                    echo $_ARCHON->bbcode_to_html(json_encode($arrAccessionbatch));
        }
        else
        {
@@ -208,6 +208,49 @@ function RemoveBad($AccessionContent) {
 }
 
 function Removefield($item,$key){
+
+
+	$item->ID = strval($item->ID);
+	$item->Enabled = strval($item->Enabled);
+	$item->ReceivedExtentUnitID = strval($item->ReceivedExtentUnitID);
+	$item->UnprocessedExtentUnitID = strval($item->UnprocessedExtentUnitID);
+	$item->MaterialTypeID = strval($item->MaterialTypeID);
+	$item->ProcessingPriorityID = strval($item->ProcessingPriorityID);
+	
+		if (isset($item->Creators)){
+        foreach ($item->Creators as &$creator){  
+            $creator = strval($creator);
+         }
+        } 
+
+	if (isset($item->Subjects)){
+        foreach ($item->Subjects as &$subject){  
+            $subject = strval($subject);
+         }
+        } 
+        
+    if (isset($item->Classifications)){
+        foreach ($item->Classifications as &$class){  
+            $class = strval($class);
+         }
+        } 
+    
+        
+    if (isset($item->CollectionEntries)){
+        foreach ($item->CollectionEntries as &$col){  
+            $col = strval($col);
+         }
+        }     
+        
+	$item->PrimaryCreator = strval($item->PrimaryCreator);
+	
+	if (isset($item->LocationEntries)){
+        foreach ($item->LocationEntries as &$loc){  
+            $loc[ExtentUnitID] = strval($loc[ExtentUnitID]);
+         }
+        } 
+	
+	
     unset($item->ReceivedExtentUnit);
 	unset($item->UnprocessedExtentUnit);    
 	unset($item->ProcessingPriority);

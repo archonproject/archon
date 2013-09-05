@@ -42,6 +42,20 @@ function RemoveBad($Users) {
 }
 
 function RemoveElement($item, $key){
+	$item->ID = strval($item->ID);
+	$item->IsAdminUser = strval($item->IsAdminUser);
+	$item->RepositoryLimit = strval($item->RepositoryLimit);
+	if (isset($item->Usergroups)){
+        foreach ($item->Usergroups as &$ug){  
+            $ug = strval($ug);
+         }
+        } 
+        
+    if (isset($item->Repositories)){
+        foreach ($item->Repositories as &$repos){  
+            $repos = strval($repos);
+         }
+        } 
 	
 	unset($item->RegisterTime);
 	unset($item->Pending);

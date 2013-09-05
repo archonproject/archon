@@ -35,6 +35,9 @@ function RemoveBad($Classification) {
     return $Classification;
 }
 function RemoveElement($item,$key){
+	$item->ID = strval($item->ID);
+	$item->ParentID = strval($item->ParentID);
+	$item->CreatorID = strval($item->CreatorID);
     unset($item->Parent );
 	unset($item->Creator );
 	unset($item->Collections);

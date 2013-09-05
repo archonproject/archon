@@ -13,7 +13,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 		
             // pulls Batches of 100 across
 
-            $arrCollectionbatch=(array_slice(RemoveBad($_ARCHON->getAllCollections()),$start-1,100,true));
+			 $arrCollectionbatch=(array_slice($_ARCHON->getAllCollections(),$start-1,100,true));
+            //$arrCollectionbatch=(array_slice(RemoveBad($_ARCHON->getAllCollections()),$start-1,100,true));
 			header('HTTP/1.0 200 Created');				
 			if (empty($arrCollectionbatch)) {
 				exit ("No matching record(s) found for batch_start=".$_REQUEST['batch_start']);
@@ -73,7 +74,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
             }
         }
 
-
+		Normalize($arrCollectionbatch);
         echo $_ARCHON->bbcode_to_html(json_encode(($arrCollectionbatch)));
         }
         else
@@ -203,13 +204,45 @@ function getCollectionlocations()
 }
 
 
-function RemoveBad($CollectionFields) {
+function Normalize($CollectionFields) {
     
-	array_walk($CollectionFields, 'Removefield');		
+	array_walk($CollectionFields, 'MakeNormal');		
     return $CollectionFields;
 }
 
-function Removefield($item,$key){
+function MakeNormal($item,$key){
+	$item->ID = strval($item->ID);
+	$item->Enabled = strval($item->Enabled);
+	$item->RepositoryID = strval($item->RepositoryID);
+	$item->ClassificationID = strval($item->ClassificationID);
+	$item->NormalDateBegin = strval($item->NormalDateBegin);
+	$item->NormalDateEnd = strval($item->NormalDateEnd);
+	$item->ExtentUnitID = strval($item->ExtentUnitID);
+	$item->MaterialTypeID = strval($item->MaterialTypeID);
+	$item->DescriptiveRulesID = strval($item->DescriptiveRulesID);
+	$item->FindingLanguageID = strval($item->FindingLanguageID);
+	
+	
+	if (isset($item->Creators)){
+        foreach ($item->Creators as &$creator){  
+            $creator = strval($creator);
+         }
+        } 
+
+	if (isset($item->Subjects)){
+        foreach ($item->Subjects as &$subject){  
+            $subject = strval($subject);
+         }
+        } 
+        
+	$item->PrimaryCreator = strval($item->PrimaryCreator);
+	
+	if (isset($item->Locations)){
+        foreach ($item->Locations as &$loc){  
+            $loc[ExtentUnitID] = strval($loc[ExtentUnitID]);
+         }
+        } 
+	
 	unset($item->AcquisitionDateMonth);
 	unset($item->AcquisitionDateDay);
 	unset($item->AcquisitionDateYear);

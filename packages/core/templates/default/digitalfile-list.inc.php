@@ -16,7 +16,8 @@ $session= $_SERVER['HTTP_SESSION'];
 				if (empty($arrDigitalContentFiles)) {
 					exit ("No matching record(s) found for batch_start=".$_REQUEST['batch_start']);
 				}
-	 	
+	 	//var_dump ($arrDigitalContentFiles);
+	 	array_walk($arrDigitalContentFiles, 'Normalize');
         echo json_encode(array_values($arrDigitalContentFiles));
 		
         }else{
@@ -37,7 +38,7 @@ function getDigitalContentFile()
                             DigitalContentID,
                             Title,
                             Filename,
-                            FileTypeID ,
+                            FileTypeID,
                             Size as Bytes,
                             DisplayOrder FROM tblDigitalLibrary_Files";
         $result = $_ARCHON->mdb2->query($query);
@@ -57,8 +58,17 @@ function getDigitalContentFile()
 
         return $arrDigitalContentFiles;
 
+}
 
+function Normalize (&$item, $key)
 
+{
+$item[ID] = strval($item[ID]);
+$item[AccessLevel] = strval($item[AccessLevel]);
+$item[DigitalContentID] = strval($item[DigitalContentID]);
+$item[FileTypeID] = strval($item[FileTypeID]);
+$item[Bytes] = strval($item[Bytes]);
+$item[DisplayOrder] = strval($item[DisplayOrder]);
 }
 
 

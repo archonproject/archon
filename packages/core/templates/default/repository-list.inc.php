@@ -27,18 +27,19 @@ else {
 //FUNCTIONS
 function SetCountry($Rep) {
     global $_ARCHON;
-    $arrCountries = $_ARCHON->getAllCountries();
+    $arrCountries = $_ARCHON->getAllCountries();  //Country currently broken, look to model in creators lookup
     foreach ($Rep as $repository) {
-        $repository->Country = $arrCountries[$repository->CountryID]->ISOAlpha3;
+        $repository->CountryID = $arrCountries[$repository->CountryID]->ISOAlpha3;
     }
 	array_walk($Rep, 'RemoveElement');
     return $Rep;
 }
 
 function RemoveElement($item, $key){
-  
+  	$item->ID = strval($item->ID);
+  	//$item->CountryID = strval($item->CountryID);
 	unset($item->Administrator);
-	unset($item->CountryID);
+	unset($item->Country);
 	unset($item->TemplateSet);
 	unset($item->ResearchFunctionality);
 	

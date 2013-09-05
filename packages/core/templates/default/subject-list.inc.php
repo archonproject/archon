@@ -26,10 +26,15 @@ else {
 
 //FUNCTIONS
 
-function RemoveSubjElements($item, $key){  
+function RemoveSubjElements($item, $key){ 
+	$item->ID = strval($item->ID);
+	$item->SubjectSourceID = strval($item->SubjectSourceID);
+	$item->SubjectTypeID = strval($item->SubjectTypeID);
+	$item->ParentID = strval($item->ParentID);
 	unset($item->SubjectType);
 	unset($item->SubjectSource);
 	unset($item->Collections);
 }
+
 
 ?>

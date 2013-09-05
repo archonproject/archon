@@ -151,6 +151,28 @@ function clean_up($CollectionContent) {
 
 function normalize($item,$key){
 
+	$item->ID = strval($item->ID);
+	$item->CollectionID = strval($item->CollectionID);
+	$item->RootContentID = strval($item->RootContentID);
+	$item->ParentID = strval($item->ParentID);
+	$item->Enabled = strval($item->Enabled);
+	$item->ContainsContent = strval($item->ContainsContent);
+	$item->SortOrder = strval($item->SortOrder);
+	$item->ParentID = strval($item->ParentID);
+	
+	if (isset($item->Subjects)){
+        foreach ($item->Subjects as &$subject){  
+            $subject = strval($subject);
+         }
+        } 
+        
+    if (isset($item->Creators)){
+        foreach ($item->Creators as &$creator){  
+            $creator = strval($creator);
+         }
+        } 
+
+        
 	if (isset($item->LevelContainer)) {
 	
  		//$item->IsIntellectual = $item->LevelContainer->IntellectualLevel ;
@@ -212,8 +234,17 @@ function normalize($item,$key){
 	
 	unset($item->LevelContainer);
 
-   if (isset($item->UserFields)){
+    unset($item->Collection);
+    unset($item->LevelContainerIdentifier);
+    unset($item->LevelContainerID);
+    unset($item->Parent);
+    unset($item->Content);
+    unset($item->DigitalContent);
+    unset($item->ToStringFields); 
+    
+     if (isset($item->UserFields)){
          foreach ($item->UserFields as $UserField){
+         	  $UserField->ID = strval($UserField->ID);
               unset($UserField->ContentID);
               unset($UserField->ToStringFields);
               unset($UserField->Content);	     
@@ -229,13 +260,8 @@ function normalize($item,$key){
     } 
 	
 	unset($item->UserFields);
-    unset($item->Collection);
-    unset($item->LevelContainerIdentifier);
-    unset($item->LevelContainerID);
-    unset($item->Parent);
-    unset($item->Content);
-    unset($item->DigitalContent);
-    unset($item->ToStringFields); 
+    
+    
 }
 
 ?>
