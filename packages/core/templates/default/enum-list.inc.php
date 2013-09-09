@@ -12,11 +12,24 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 			
  		  switch ($enumtype) {
             	
+            	case 'countries';
+            	
+            		$arrEnum = $_ARCHON->getAllCountries();
+					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
+					array_walk($arrEnumbatch, 'Normalize');
+                    array_walk($arrEnumbatch, 'RemoveCountries');
+                    $arrEnumbatch = objectToArray($arrEnumbatch);	
+					array_walk_recursive($arrEnumbatch, 'myutf8_encode');
+					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
+                	break;
+            		       	
             	case 'creatorsources';
                     $arrEnum = $_ARCHON->getAllCreatorSources();
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
 					array_walk($arrEnumbatch, 'Normalize');
                     array_walk($arrEnumbatch, 'RemoveCreators');
+                    $arrEnumbatch = objectToArray($arrEnumbatch);	
+					array_walk_recursive($arrEnumbatch, 'myutf8_encode');
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break;
             	
@@ -25,6 +38,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 				    $arrEnum = $_ARCHON->getAllExtentUnits();
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
 					array_walk($arrEnumbatch, 'Normalize');
+					$arrEnumbatch = objectToArray($arrEnumbatch);	
+					array_walk_recursive($arrEnumbatch, 'myutf8_encode');
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break; 
 		
@@ -34,6 +49,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
 					array_walk($arrEnumbatch, 'Normalize');
                     array_walk($arrEnumbatch, 'RemoveProcessingPriorities');
+                    $arrEnumbatch = objectToArray($arrEnumbatch);	
+					array_walk_recursive($arrEnumbatch, 'myutf8_encode');
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break;
 		
@@ -43,6 +60,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
 					array_walk($arrEnumbatch, 'Normalize');
                     array_walk($arrEnumbatch, 'RemoveFileTypes');
+                    $arrEnumbatch = objectToArray($arrEnumbatch);	
+					array_walk_recursive($arrEnumbatch, 'myutf8_encode');
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break;
    
@@ -51,6 +70,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 				    $arrEnum = $_ARCHON->getAllMaterialTypes();
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
 					array_walk($arrEnumbatch, 'Normalize');
+					$arrEnumbatch = objectToArray($arrEnumbatch);	
+					array_walk_recursive($arrEnumbatch, 'myutf8_encode');
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break; 
         	        
@@ -60,6 +81,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
 					array_walk($arrEnumbatch, 'NormalizeArray');
 					array_walk($arrEnumbatch, 'RemoveContainerTypes');
+					$arrEnumbatch = objectToArray($arrEnumbatch);	
+					array_walk_recursive($arrEnumbatch, 'myutf8_encode');
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break; 
 					
@@ -73,6 +96,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
 					array_walk($arrEnumbatch, 'Normalize');
                     array_walk($arrEnumbatch, 'RemoveUserGroups');
+                    $arrEnumbatch = objectToArray($arrEnumbatch);	
+					array_walk_recursive($arrEnumbatch, 'myutf8_encode');
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break;
 					
@@ -81,12 +106,14 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 					$arrEnum = $_ARCHON->getAllSubjectSources();
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
 					array_walk($arrEnumbatch, 'Normalize');
+					$arrEnumbatch = objectToArray($arrEnumbatch);	
+					array_walk_recursive($arrEnumbatch, 'myutf8_encode');
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break;
         
             	default;
 					
-       				echo ("enum_type not found.  Allowed values:'creatorsources', 'extentunits', 'filetypes', 'materialtypes', 'levelcontainers','usergroups', and 'subjectsources'.  Please try again.");   
+       				echo ("enum_type not found.  Allowed values: 'countries', 'creatorsources', 'extentunits', 'filetypes', 'materialtypes', 'levelcontainers','usergroups', and 'subjectsources'.  Please try again.");   
 					break;			
 			}	
 			 			
@@ -172,4 +199,20 @@ function RemoveProcessingPriorities($item,$key){
 
 }
 
+function objectToArray( $object ) {
+    if( !is_object( $object ) && !is_array( $object ) ) {
+        return $object;
+    }
+    if( is_object( $object ) ) {
+        $object = (array) $object;
+    }
+    return array_map( 'objectToArray', $object );
+}
+
+
+function myutf8_encode (&$value)
+
+{
+	$value = utf8_encode($value);
+}
 ?>

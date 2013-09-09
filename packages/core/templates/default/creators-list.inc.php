@@ -7,21 +7,18 @@ $session= $_SERVER['HTTP_SESSION'];
 if ($_ARCHON->Security->Session->verifysession($session)){
 
    if (isset($_REQUEST['batch_start'])){
-
-            //Handles the zero condition
-
-            $start = ( $_REQUEST['batch_start'] < 1 ? 1: $_REQUEST['batch_start']);
+        	$start = ( $_REQUEST['batch_start'] < 1 ? 1: $_REQUEST['batch_start']);
          
-           $arrCreators =array_slice($_ARCHON->getAllCreatorsJSON(),$start-1,100,true);
-		   header('HTTP/1.0 200 Created');				
+           	$arrCreators =array_slice($_ARCHON->getAllCreatorsJSON(),$start-1,100,true);
+		   	header('HTTP/1.0 200 Created');				
 				if (empty($arrCreators)) {
 					exit ("No matching record(s) found for batch_start=".$_REQUEST['batch_start']);
 				}
-		    
             array_walk($arrCreators, 'GetRelatedCreators');
 			array_walk($arrCreators,'Normalize');
-         
-			echo ($_ARCHON->bbcode_to_html( json_encode($arrCreators)));
+			$arrCreators = objectToArray($arrCreators);
+			array_walk_recursive($arrCreators, 'myutf8_encode');		
+			echo ($_ARCHON->bbcode_to_html(json_encode($arrCreators)));
         }
         else
         {
@@ -41,7 +38,7 @@ function getRelatedCreators($item)
 {
     global $_ARCHON;
 
-        $query = "SELECT RelatedCreatorID,CreatorRelationshipTypeID FROM tblCreators_CreatorCreatorIndex WHERE CreatorID=". $item->ID;
+        $query = "SELECT RelatedCreatorID,CreatorRelationshipTypeID, Description FROM tblCreators_CreatorCreatorIndex WHERE CreatorID=". $item->ID;
         $result = $_ARCHON->mdb2->query($query);
 
         if(PEAR::isError($result))
@@ -59,6 +56,7 @@ function getRelatedCreators($item)
 }
 
 function Normalize($item,$key){
+	
 	if (isset($item->CreatorRelationships)){
         foreach ($item->CreatorRelationships as &$rel){  
             $rel[RelatedCreatorID] = strval($rel[RelatedCreatorID]);
@@ -83,4 +81,21 @@ function Normalize($item,$key){
 	unset($item->Language);
 	unset($item->Creators);
 }
+
+function objectToArray( $object ) {
+    if( !is_object( $object ) && !is_array( $object ) ) {
+        return $object;
+    }
+    if( is_object( $object ) ) {
+        $object = (array) $object;
+    }
+    return array_map( 'objectToArray', $object );
+}
+
+function myutf8_encode (&$value)
+
+{
+	$value = utf8_encode($value);
+}
+
 ?>

@@ -10,8 +10,11 @@ if ($_ARCHON->Security->Session->verifysession($session)){
   	$start = ($_REQUEST['batch_start'] < 1 ? 1: $_REQUEST['batch_start']);
 
  	 	header('HTTP/1.0 200 Created');
-		$arrRep = SetCountry($_ARCHON->getAllRepositories());
-		$arrRepBatch = array_slice($arrRep,$start-1,100,true);		
+		$arrRep = $_ARCHON->getAllRepositories();
+		$arrRepBatch = array_slice($arrRep,$start-1,100,true);
+		$arrRepBatch = objectToArray($arrRepBatch);
+		array_walk ($arrRepBatch, 'Normalize');
+		array_walk_recursive ($arrRepBatch, 'myutf8_encode');
 		echo (empty($arrRepBatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrRepBatch));
   	} 
     else {
@@ -25,23 +28,27 @@ else {
 }
 
 //FUNCTIONS
-function SetCountry($Rep) {
-    global $_ARCHON;
-    $arrCountries = $_ARCHON->getAllCountries();  //Country currently broken, look to model in creators lookup
-    foreach ($Rep as $repository) {
-        $repository->CountryID = $arrCountries[$repository->CountryID]->ISOAlpha3;
+
+function objectToArray( $object ) {
+    if( !is_object( $object ) && !is_array( $object ) ) {
+        return $object;
     }
-	array_walk($Rep, 'RemoveElement');
-    return $Rep;
+    if( is_object( $object ) ) {
+        $object = (array) $object;
+    }
+    return array_map( 'objectToArray', $object );
 }
 
-function RemoveElement($item, $key){
-  	$item->ID = strval($item->ID);
-  	//$item->CountryID = strval($item->CountryID);
-	unset($item->Administrator);
-	unset($item->Country);
-	unset($item->TemplateSet);
-	unset($item->ResearchFunctionality);
+function Normalize (&$item, $key){
+  	$item[ID] = strval($item[ID]);
+	unset($item[Administrator]);
+	unset($item[Country]);
+	unset($item[TemplateSet]);
+	unset($item[ResearchFunctionality]);
 	
+}
+
+function myutf8_encode (&$value) {
+	$value = utf8_encode($value);
 }
 ?>
