@@ -65,8 +65,10 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 
                 }
             }
-					 Normalize($arrDigitalContentbatch);
-                     echo $_ARCHON->bbcode_to_html(json_encode($arrDigitalContentbatch));
+					Normalize($arrDigitalContentbatch);
+					$arrDigitalContentbatch = objectToArray($arrDigitalContentbatch); 
+					array_walk_recursive($arrDigitalContentbatch, 'myutf8_encode');
+                    echo $_ARCHON->bbcode_to_html(json_encode($arrDigitalContentbatch));
         }else{
 			header('HTTP/1.0 400 Bad Request');
 				
@@ -228,6 +230,20 @@ function Normal($item,$key)
    // unset($item->PrimaryCreator);
     unset($item->ToStringFields);
 
+}
+
+function objectToArray( $object ) {
+    if( !is_object( $object ) && !is_array( $object ) ) {
+        return $object;
+    }
+    if( is_object( $object ) ) {
+        $object = (array) $object;
+    }
+    return array_map( 'objectToArray', $object );
+}
+
+function myutf8_encode (&$value) {
+	$value = utf8_encode($value);
 }
 
 ?>

@@ -14,7 +14,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 			if (empty($arrClassificationbatch)) {
 				exit ("No matching record(s) found for batch_start=".$_REQUEST['batch_start']);
 			}		
-        	
+        	$arrClassificationbatch = objectToArray($arrClassificationbatch); 
+			array_walk_recursive($arrClassificationbatch, 'myutf8_encode');
 			echo json_encode($arrClassificationbatch);
 			}
 			else {
@@ -43,5 +44,19 @@ function RemoveElement($item,$key){
 	unset($item->Collections);
 	unset($item->Classifications);
 	unset($item->ToStringFields);
+}
+
+function objectToArray( $object ) {
+    if( !is_object( $object ) && !is_array( $object ) ) {
+        return $object;
+    }
+    if( is_object( $object ) ) {
+        $object = (array) $object;
+    }
+    return array_map( 'objectToArray', $object );
+}
+
+function myutf8_encode (&$value) {
+	$value = utf8_encode($value);
 }
 ?>

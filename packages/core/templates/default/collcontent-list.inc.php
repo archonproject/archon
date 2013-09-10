@@ -41,6 +41,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                     }
                 }
 				clean_up($arrout);
+				$arrout = objectToArray($arrout); 
+				array_walk_recursive($arrout, 'myutf8_encode');
 				echo json_encode($arrout);
             }
             else
@@ -260,8 +262,21 @@ function normalize($item,$key){
     } 
 	
 	unset($item->UserFields);
-    
-    
 }
+
+function objectToArray( $object ) {
+    if( !is_object( $object ) && !is_array( $object ) ) {
+        return $object;
+    }
+    if( is_object( $object ) ) {
+        $object = (array) $object;
+    }
+    return array_map( 'objectToArray', $object );
+}
+
+function myutf8_encode (&$value) {
+	$value = utf8_encode($value);
+}
+
 
 ?>

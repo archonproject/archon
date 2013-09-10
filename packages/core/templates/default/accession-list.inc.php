@@ -16,7 +16,6 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                 
 				header('HTTP/1.0 200 Created');
 								
-
                 $arrAccessionbatch = (array_slice($arrAccessions,$start-1,100,true));
 
 				if (empty($arrAccessionbatch)) {
@@ -72,6 +71,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                 }
                  //Locations
 					RemoveBad($arrAccessionbatch);
+					$arrAccessionbatch = objectToArray($arrAccessionbatch); 
+					array_walk_recursive($arrAccessionbatch, 'myutf8_encode');
                     echo $_ARCHON->bbcode_to_html(json_encode($arrAccessionbatch));
        }
        else
@@ -250,7 +251,6 @@ function Removefield($item,$key){
          }
         } 
 	
-	
     unset($item->ReceivedExtentUnit);
 	unset($item->UnprocessedExtentUnit);    
 	unset($item->ProcessingPriority);
@@ -269,4 +269,19 @@ function Removefield($item,$key){
     unset($item->LocationEntries);
     
 }
+
+function objectToArray( $object ) {
+    if( !is_object( $object ) && !is_array( $object ) ) {
+        return $object;
+    }
+    if( is_object( $object ) ) {
+        $object = (array) $object;
+    }
+    return array_map( 'objectToArray', $object );
+}
+
+function myutf8_encode (&$value) {
+	$value = utf8_encode($value);
+}
+
 ?>

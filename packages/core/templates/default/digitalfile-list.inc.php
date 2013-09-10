@@ -16,8 +16,9 @@ $session= $_SERVER['HTTP_SESSION'];
 				if (empty($arrDigitalContentFiles)) {
 					exit ("No matching record(s) found for batch_start=".$_REQUEST['batch_start']);
 				}
-	 	//var_dump ($arrDigitalContentFiles);
 	 	array_walk($arrDigitalContentFiles, 'Normalize');
+	 	$arrDigitalContentFiles = objectToArray($arrDigitalContentFiles); 
+		array_walk_recursive($arrDigitalContentFiles, 'myutf8_encode');
         echo json_encode(array_values($arrDigitalContentFiles));
 		
         }else{
@@ -69,6 +70,20 @@ $item[DigitalContentID] = strval($item[DigitalContentID]);
 $item[FileTypeID] = strval($item[FileTypeID]);
 $item[Bytes] = strval($item[Bytes]);
 $item[DisplayOrder] = strval($item[DisplayOrder]);
+}
+
+function objectToArray( $object ) {
+    if( !is_object( $object ) && !is_array( $object ) ) {
+        return $object;
+    }
+    if( is_object( $object ) ) {
+        $object = (array) $object;
+    }
+    return array_map( 'objectToArray', $object );
+}
+
+function myutf8_encode (&$value) {
+	$value = utf8_encode($value);
 }
 
 

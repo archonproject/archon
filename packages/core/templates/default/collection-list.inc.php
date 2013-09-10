@@ -45,26 +45,21 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                 }
             }
             
-           
             //Languages
-        $arrAllLanguages = $_ARCHON->getAllLanguages();
-        $arrCollectionLanguages= getCollectionLanguages();
-        foreach ($arrCollectionLanguages as $CollectionRelatedObject)
-        {
-            if(array_key_exists($CollectionRelatedObject['CollectionID'],$arrCollectionbatch)){
-
-
-                $arrcreaterel = $arrAllLanguages[$CollectionRelatedObject['LanguageID']]->LanguageShort;
-                $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->Languages[] = $arrcreaterel;
-
+        	$arrAllLanguages = $_ARCHON->getAllLanguages();
+        	$arrCollectionLanguages= getCollectionLanguages();
+        	foreach ($arrCollectionLanguages as $CollectionRelatedObject)
+        	{
+            	if(array_key_exists($CollectionRelatedObject['CollectionID'],$arrCollectionbatch)){
+	                $arrcreaterel = $arrAllLanguages[$CollectionRelatedObject['LanguageID']]->LanguageShort;
+    	            $arrCollectionbatch[$CollectionRelatedObject['CollectionID']]->Languages[] = $arrcreaterel;
             }
         }
 
  //Locations
 
             $arrCollectionlocations = getCollectionlocations();
-
-                   foreach ($arrCollectionlocations as $CollectionRelatedObject)
+            foreach ($arrCollectionlocations as $CollectionRelatedObject)
         {
           
             if(array_key_exists($CollectionRelatedObject['CollectionID'],$arrCollectionbatch)){
@@ -73,8 +68,10 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 
             }
         }
-
-		Normalize($arrCollectionbatch);
+		$arrCollectionbatch = Normalize($arrCollectionbatch);
+		$arrCollectionbatch = objectToArray($arrCollectionbatch); 
+		array_walk_recursive($arrCollectionbatch, 'myutf8_encode');
+		
         echo $_ARCHON->bbcode_to_html(json_encode(($arrCollectionbatch)));
         }
         else
@@ -263,6 +260,20 @@ function MakeNormal($item,$key){
 	unset($item->ignoreCart);
 	unset($item->DigitalContent);
 	unset($item->LocationEntries);
+}
+
+function objectToArray( $object ) {
+    if( !is_object( $object ) && !is_array( $object ) ) {
+        return $object;
+    }
+    if( is_object( $object ) ) {
+        $object = (array) $object;
+    }
+    return array_map( 'objectToArray', $object );
+}
+
+function myutf8_encode (&$value) {
+	$value = utf8_encode($value);
 }
 
 ?>
