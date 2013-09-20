@@ -267,6 +267,7 @@ function Removefield($item,$key){
     $item->Locations = $item->LocationEntries;
     unset($item->CollectionEntries);
     unset($item->LocationEntries);
+    if ($item->AccessionDate == "") {$item->AccessionDate = "99990101";} //force dummy acccession date if not set
     
 }
 
