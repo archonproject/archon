@@ -62,8 +62,35 @@ function Normalize($item,$key){
             $rel[RelatedCreatorID] = strval($rel[RelatedCreatorID]);
             $rel[CreatorRelationshipTypeID] = strval($rel[CreatorRelationshipTypeID]);
          }
-        } 
-	$item->CreatorTypeID = strval($item->CreatorTypeID);
+        }
+    
+    $item->CreatorTypeID = strval($item->CreatorTypeID);
+    
+    switch ($item->CreatorTypeID)  ////if miscoded  set to right value to allow migration
+    {
+    	case '19';		//keep permitted values untouched
+		case '20';
+		case '21';
+		case '22';
+		case '23';
+		break;
+		
+    	case '27';		//corporate
+    	case '26';
+    	case '57';						
+   	 	$item->CreatorTypeID = "22";
+    	break;
+
+    	case '24';		// personal
+    	case '54';						
+   	 	$item->CreatorTypeID = "19";
+    	break;
+    		   		
+    	default;		//set anything else to corporate
+    	$item->CreatorTypeID = "22";
+    	break;
+     }    
+	
 	$item->CreatorSourceID = strval($item->CreatorSourceID);
 	$item->ID = strval($item->ID);
 	$item->RepositoryID = strval($item->RepositoryID);
