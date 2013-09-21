@@ -212,6 +212,11 @@ function MakeNormal($item,$key){
 	$item->Enabled = strval($item->Enabled);
 	$item->RepositoryID = strval($item->RepositoryID);
 	$item->ClassificationID = strval($item->ClassificationID);
+	if ($item->NormalDateBegin > $item->NormalDateEnd)
+		{
+			$item->NormalDateBegin = "";
+			$item->NormalDateEnd = "";
+		}
 	$item->NormalDateBegin = strval($item->NormalDateBegin);
 	$item->NormalDateEnd = strval($item->NormalDateEnd);
 	$item->ExtentUnitID = strval($item->ExtentUnitID);
