@@ -19,7 +19,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 					array_walk($arrEnumbatch, 'Normalize');
                     array_walk($arrEnumbatch, 'RemoveCountries');
                     $arrEnumbatch = objectToArray($arrEnumbatch);	
-					array_walk_recursive($arrEnumbatch, 'myutf8_encode');
+					if ($_ARCHON->db->ServerType == 'MSSQL') {array_walk_recursive($arrEnumbatch, 'myutf8_encode');}  //fix unicode for MSSQL migrations; function will incorrectly transform mysql unicode
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break;
             		       	
@@ -29,7 +29,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 					array_walk($arrEnumbatch, 'Normalize');
                     array_walk($arrEnumbatch, 'RemoveCreators');
                     $arrEnumbatch = objectToArray($arrEnumbatch);	
-					array_walk_recursive($arrEnumbatch, 'myutf8_encode');
+					if ($_ARCHON->db->ServerType == 'MSSQL') {array_walk_recursive($arrEnumbatch, 'myutf8_encode');}  //fix unicode for MSSQL migrations; function will incorrectly transform mysql unicode
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break;
             	
@@ -39,7 +39,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
 					array_walk($arrEnumbatch, 'Normalize');
 					$arrEnumbatch = objectToArray($arrEnumbatch);	
-					array_walk_recursive($arrEnumbatch, 'myutf8_encode');
+					if ($_ARCHON->db->ServerType == 'MSSQL') {array_walk_recursive($arrEnumbatch, 'myutf8_encode');}  //fix unicode for MSSQL migrations; function will incorrectly transform mysql unicode
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break; 
 		
@@ -50,7 +50,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 					array_walk($arrEnumbatch, 'Normalize');
                     array_walk($arrEnumbatch, 'RemoveProcessingPriorities');
                     $arrEnumbatch = objectToArray($arrEnumbatch);	
-					array_walk_recursive($arrEnumbatch, 'myutf8_encode');
+					if ($_ARCHON->db->ServerType == 'MSSQL') {array_walk_recursive($arrEnumbatch, 'myutf8_encode');}  //fix unicode for MSSQL migrations; function will incorrectly transform mysql unicode
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break;
 		
@@ -61,7 +61,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 					array_walk($arrEnumbatch, 'Normalize');
                     array_walk($arrEnumbatch, 'RemoveFileTypes');
                     $arrEnumbatch = objectToArray($arrEnumbatch);	
-					array_walk_recursive($arrEnumbatch, 'myutf8_encode');
+					if ($_ARCHON->db->ServerType == 'MSSQL') {array_walk_recursive($arrEnumbatch, 'myutf8_encode');}  //fix unicode for MSSQL migrations; function will incorrectly transform mysql unicode
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break;
    
@@ -71,7 +71,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
 					array_walk($arrEnumbatch, 'Normalize');
 					$arrEnumbatch = objectToArray($arrEnumbatch);	
-					array_walk_recursive($arrEnumbatch, 'myutf8_encode');
+					if ($_ARCHON->db->ServerType == 'MSSQL') {array_walk_recursive($arrEnumbatch, 'myutf8_encode');}  //fix unicode for MSSQL migrations; function will incorrectly transform mysql unicode
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break; 
         	        
@@ -82,7 +82,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 					array_walk($arrEnumbatch, 'NormalizeArray');
 					array_walk($arrEnumbatch, 'RemoveContainerTypes');
 					$arrEnumbatch = objectToArray($arrEnumbatch);	
-					array_walk_recursive($arrEnumbatch, 'myutf8_encode');
+					if ($_ARCHON->db->ServerType == 'MSSQL') {array_walk_recursive($arrEnumbatch, 'myutf8_encode');}  //fix unicode for MSSQL migrations; function will incorrectly transform mysql unicode
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break; 
 					
@@ -97,7 +97,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 					array_walk($arrEnumbatch, 'Normalize');
                     array_walk($arrEnumbatch, 'RemoveUserGroups');
                     $arrEnumbatch = objectToArray($arrEnumbatch);	
-					array_walk_recursive($arrEnumbatch, 'myutf8_encode');
+					if ($_ARCHON->db->ServerType == 'MSSQL') {array_walk_recursive($arrEnumbatch, 'myutf8_encode');}  //fix unicode for MSSQL migrations; function will incorrectly transform mysql unicode
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break;
 					
@@ -107,7 +107,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 					$arrEnumbatch = array_slice($arrEnum,$start-1,100,true);
 					array_walk($arrEnumbatch, 'Normalize');
 					$arrEnumbatch = objectToArray($arrEnumbatch);	
-					array_walk_recursive($arrEnumbatch, 'myutf8_encode');
+					if ($_ARCHON->db->ServerType == 'MSSQL') {array_walk_recursive($arrEnumbatch, 'myutf8_encode');}  //fix unicode for MSSQL migrations; function will incorrectly transform mysql unicode
 					echo (empty($arrEnumbatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrEnumbatch));
                 	break;
         

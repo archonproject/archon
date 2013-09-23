@@ -23,7 +23,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                 foreach ($arrCollectionContentCreator as $CollectionContentRelatedObject)
                 {
                     extract($CollectionContentRelatedObject);
-                    // Multi array  special process probably need to revisit
+                    // Multi array special process
                     if(isset($arrout['0'][$CollectionContentID])){
                         $arrout['0'][$CollectionContentID]->Creators[] = $CollectionContentRelatedObject['CreatorID'];
                     }
@@ -42,7 +42,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                 }
 				clean_up($arrout);
 				$arrout = objectToArray($arrout); 
-				array_walk_recursive($arrout, 'myutf8_encode');
+				if ($_ARCHON->db->ServerType == 'MSSQL') {array_walk_recursive($arrout, 'myutf8_encode');}  //fix unicode for MSSQL migrations; function will incorrectly transform mysql unicode
+
 				echo json_encode($arrout);
             }
             else

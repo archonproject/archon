@@ -67,7 +67,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
             }
 					Normalize($arrDigitalContentbatch);
 					$arrDigitalContentbatch = objectToArray($arrDigitalContentbatch); 
-					array_walk_recursive($arrDigitalContentbatch, 'myutf8_encode');
+					if ($_ARCHON->db->ServerType == 'MSSQL') {array_walk_recursive($arrDigitalContentbatch, 'myutf8_encode');}  //fix unicode for MSSQL migrations; function will incorrectly transform mysql unicode
                     echo $_ARCHON->bbcode_to_html(json_encode($arrDigitalContentbatch));
         }else{
 			header('HTTP/1.0 400 Bad Request');

@@ -9,12 +9,8 @@ if ($_ARCHON->Security->Session->verifysession($session)){
     if (isset($_REQUEST['fileid'])){
 
         $arrfileblob = (getfileblobbyID());
-
-           // echo print_r(base64_encode($arrfileblob[0]['FileContents']));
                     if (isset($arrfileblob)){
-                        $arrfileblob =array_values($arrfileblob);
-                       // $arrfileblob[0]['FileContents']=base64_encode($arrfileblob[0]['FileContents']);
-                       //echo json_encode(array_values($arrfileblob));
+                        $arrfileblob = array_values($arrfileblob);
                         echo print $arrfileblob[0]['FileContents'];
                     }
                     else {
@@ -28,8 +24,6 @@ if ($_ARCHON->Security->Session->verifysession($session)){
             echo "fileid  Not found! Please enter a fileid and resubmit the request.";
 
         }
-
-
 
 } else {
 	header('HTTP/1.0 400 Bad Request');

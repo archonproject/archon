@@ -17,7 +17,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
             array_walk($arrCreators, 'GetRelatedCreators');
 			array_walk($arrCreators,'Normalize');
 			$arrCreators = objectToArray($arrCreators);
-			array_walk_recursive($arrCreators, 'myutf8_encode');		
+			if ($_ARCHON->db->ServerType == 'MSSQL') {array_walk_recursive($arrCreators, 'myutf8_encode');}  //fix unicode for MSSQL migrations; function will incorrectly transform mysql unicode	
 			echo ($_ARCHON->bbcode_to_html(json_encode($arrCreators)));
         }
         else

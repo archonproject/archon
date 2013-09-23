@@ -14,7 +14,7 @@ if ($_ARCHON->Security->Session->verifysession($session)){
 		$arrRepBatch = array_slice($arrRep,$start-1,100,true);
 		$arrRepBatch = objectToArray($arrRepBatch);
 		array_walk ($arrRepBatch, 'Normalize');
-		array_walk_recursive ($arrRepBatch, 'myutf8_encode');
+		if ($_ARCHON->db->ServerType == 'MSSQL') {array_walk_recursive($arrRepBatch, 'myutf8_encode');}  //fix unicode for MSSQL migrations; function will incorrectly transform mysql unicode
 		echo (empty($arrRepBatch) ? "No matching record(s) found for batch_start=" . $_REQUEST['batch_start'] : json_encode($arrRepBatch));
   	} 
     else {

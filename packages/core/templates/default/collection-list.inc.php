@@ -14,7 +14,6 @@ if ($_ARCHON->Security->Session->verifysession($session)){
             // pulls Batches of 100 across
 
 			 $arrCollectionbatch=(array_slice($_ARCHON->getAllCollections(),$start-1,100,true));
-            //$arrCollectionbatch=(array_slice(RemoveBad($_ARCHON->getAllCollections()),$start-1,100,true));
 			header('HTTP/1.0 200 Created');				
 			if (empty($arrCollectionbatch)) {
 				exit ("No matching record(s) found for batch_start=".$_REQUEST['batch_start']);
@@ -69,10 +68,9 @@ if ($_ARCHON->Security->Session->verifysession($session)){
             }
         }
 		$arrCollectionbatch = Normalize($arrCollectionbatch);
-		$arrCollectionbatch = objectToArray($arrCollectionbatch); 
-		array_walk_recursive($arrCollectionbatch, 'myutf8_encode');
-		
-        echo $_ARCHON->bbcode_to_html(json_encode(($arrCollectionbatch)));
+		$arrCollectionbatch = objectToArray($arrCollectionbatch); 		
+		if ($_ARCHON->db->ServerType == 'MSSQL') {array_walk_recursive($arrCollectionbatch, 'myutf8_encode');}  //fix unicode for MSSQL migrations; function will incorrectly transform mysql unicode
+		echo $_ARCHON->bbcode_to_html(json_encode(($arrCollectionbatch)));
         }
         else
         {
