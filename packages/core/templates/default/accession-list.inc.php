@@ -212,6 +212,10 @@ function Removefield($item,$key){
 
 
 	$item->ID = strval($item->ID);
+	if (empty($item->Identifier))
+	{
+		$item->Identifier = $item->AccessionDate.': ' .$item->Title;
+	}
 	$item->Enabled = strval($item->Enabled);
 	$item->ReceivedExtentUnitID = strval($item->ReceivedExtentUnitID);
 	$item->UnprocessedExtentUnitID = strval($item->UnprocessedExtentUnitID);
