@@ -212,6 +212,10 @@ function Removefield($item,$key){
 
 
 	$item->ID = strval($item->ID);
+	if (empty($item->AccessionDate))
+	{
+		$item->AccessionDate = '99990101';
+	}
 	if (empty($item->Identifier))
 	{
 		$item->Identifier = $item->AccessionDate.': ' .$item->Title;
