@@ -37,14 +37,12 @@ if ($_ARCHON->Security->Session->verifysession($session)){
                     extract($CollectionContentRelatedObject);
                     if (isset($arrout['0'][$CollectionContentID])){
                         $arrout['0'][$CollectionContentRelatedObject['CollectionContentID']]->Subjects[] = $CollectionContentRelatedObject['SubjectID'];
-
                     }
                 }
 				clean_up($arrout);
 				$arrout = objectToArray($arrout); 
 				if ($_ARCHON->db->ServerType == 'MSSQL') {array_walk_recursive($arrout, 'myutf8_encode');}  //fix unicode for MSSQL migrations; function will incorrectly transform mysql unicode
-
-				echo json_encode($arrout);
+				echo json_encode($arrout[0]);  // at some point, the object was nested with first element of a parent array, so don't encod the second, null object.-++----
             }
             else
             {
@@ -71,12 +69,15 @@ function loadCollectionContent($start){
 
     $cid = $_REQUEST['cid'];
     $objCollection = New Collection($_REQUEST['cid']);
-    $objCollection->dbLoadContentjson();  //optional parameter limits to only one root node
+    $objCollection->dbLoadContentjson($start-1);  //parameter gives start row for result set of up to 100 rows
 
-    $arrContent[]= array_slice($objCollection->Content,$start-1,100,true);
+    //$arrContent[]= array_slice($objCollection->Content,$start-1,100,true);
+    $arrContent[]=$objCollection->Content; 
+    //var_dump ($arrContent);
+    //exit;
     $arrDisplay[]= array();
 
-    foreach ( $arrContent as $contentObj)
+    foreach ($arrContent as $contentObj)
     {
         if ($contentObj['ParentID'] == 0)
         {// Top Node Loaded first
@@ -175,12 +176,7 @@ function normalize($item,$key){
          }
         } 
 
-        
 	if (isset($item->LevelContainer)) {
-	
- 		//$item->IsIntellectual = $item->LevelContainer->IntellectualLevel ;
- 		//$item->IsPhysical = $item->LevelContainer->PhysicalContainer ;
- 		
  		if ($item->LevelContainer->IntellectualLevel == "1" && $item->LevelContainer->PhysicalContainer== "0") {
 		$item->ContentType = "1";
 		}
@@ -236,7 +232,6 @@ function normalize($item,$key){
 	}
 	
 	unset($item->LevelContainer);
-
     unset($item->Collection);
     unset($item->LevelContainerIdentifier);
     unset($item->LevelContainerID);
@@ -244,7 +239,6 @@ function normalize($item,$key){
     unset($item->Content);
     unset($item->DigitalContent);
     unset($item->ToStringFields); 
-    
      if (isset($item->UserFields)){
          foreach ($item->UserFields as $UserField){
          	  $UserField->ID = strval($UserField->ID);
@@ -261,7 +255,6 @@ function normalize($item,$key){
          }
     $item->Notes = $item->UserFields; 
     } 
-	
 	unset($item->UserFields);
 }
 
@@ -278,6 +271,5 @@ function objectToArray( $object ) {
 function myutf8_encode (&$value) {
 	$value = utf8_encode($value);
 }
-
 
 ?>

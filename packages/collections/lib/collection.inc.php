@@ -847,25 +847,20 @@ abstract class Collections_Collection
       return true;
    }
     /**
-     * Loads Content for Collection instance
+     * Loads Content for Collection instance for json
      *
      * @internal
-     * This function could potentially take a very long time
-     * to complete.  Before calling, consider adjusting max_execution_time
-     * using set_time_limit(int seconds).
-     * Also, this function will pull all content with a RootContentID of 0
-     * reguardless of the parameter and attempt to fix the RootContentID for
-     * at least part of that set to optimize later calls
+     * This function loads 100 items of collection content for a particular item, starting
+     * at the offset.  Items are ordered by ParentID and then by SortOrder.    
      *
-     * @param integer $RootContentID[optional] Specifies which top level container to pull content from.
-     * LOADCONTENT defines may be used to grab all content or no content with this function
+     * @param integer $offset[optional] Specifies the start now in the result set for the
+     * query loading all collection content records for a single collection.  Results are
      *
      * @return boolean
      */
-    public function dbLoadContentjson($RootContentID = LOADCONTENT_ALL)
+    public function dbLoadContentjson($offset = 0)
     {
         global $_ARCHON;
-
         if(!$this->ID)
         {
             $_ARCHON->declareError("Could not load CollectionContent: Collection ID not defined.");
@@ -877,83 +872,35 @@ abstract class Collections_Collection
             $_ARCHON->declareError("Could not load CollectionContent: Collection ID must be numeric.");
             return false;
         }
-
-        if(!is_natural($RootContentID) && $RootContentID != LOADCONTENT_NONE)
-        {
-            $_ARCHON->declareError("Could not load CollectionContent: RootContentID must be numeric.");
-            return false;
-        }
-
-        if($RootContentID == LOADCONTENT_NONE)
-        {
-            return true;
-        }
-
+        
         $this->Content = array();
-
-        static $contentPrep = NULL;
-        if(!isset($contentPrep))
-        {
-            $rootcontentidquery = " AND ((tblCollections_Content.RootContentID = ? OR ? = " . LOADCONTENT_ALL . ") OR tblCollections_Content.RootContentID = '0')";
-            $rootcontentidtypes = array('integer', 'integer');
-
-            $query = "SELECT tblCollections_Content.* FROM tblCollections_Content JOIN tblCollections_LevelContainers on tblCollections_LevelContainers.ID = tblCollections_Content.LevelContainerID WHERE tblCollections_Content.CollectionID = ?$rootcontentidquery ORDER BY tblCollections_Content.ParentID, tblCollections_Content.SortOrder";
-            $contentPrep = $_ARCHON->mdb2->prepare($query, array_merge(array('integer'), $rootcontentidtypes), MDB2_PREPARE_RESULT);
-        }
-
-        $rootcontentidvars = array($RootContentID, $RootContentID);
-
-        $result = $contentPrep->execute(array_merge(array($this->ID), $rootcontentidvars));
+		$query = "SELECT tblCollections_Content.* FROM tblCollections_Content JOIN tblCollections_LevelContainers on tblCollections_LevelContainers.ID = tblCollections_Content.LevelContainerID WHERE tblCollections_Content.CollectionID = ". $this->ID . " ORDER BY tblCollections_Content.ParentID, tblCollections_Content.SortOrder";
+		$_ARCHON->mdb2->setLimit(100,$offset);	
+        $result = $_ARCHON->mdb2->query($query);
         if(PEAR::isError($result))
         {
             trigger_error($result->getMessage(), E_USER_ERROR);
         }
-
-        // If there is no content found.
-        if(!$result->numRows())
+        if(!$result->numRows())          // If there is no content found
         {
             $result->free();
             return true;
         }
-
         $arrLevelContainers = $_ARCHON->getAllLevelContainers();
-//      $arrCollectionContentVariables = get_object_vars(New CollectionContent());
-
         while($row = $result->fetchRow())
         {
             $this->Content[$row['ID']] = New CollectionContent($row);
         }
         $result->free();
-
-//      $_ARCHON->sortCollectionContentArray(&$this->Content);
-        // Now we need to establish parent-child relationships
         foreach($this->Content as $ID => $objContent)
         {
             $objContent->LevelContainer = $arrLevelContainers[$objContent->LevelContainerID];
-            $objContent->Collection = $this;
-
-      /*      if($objContent->ParentID)
+         	array($objContent->UserFields);  //put in null property even if they don't use user fields
+            
+            if(CONFIG_COLLECTIONS_ENABLE_USER_DEFINED_FIELDS)
             {
-                $this->Content[$objContent->ParentID]->Content[$ID] = $objContent;
-                $objContent->Parent = $this->Content[$objContent->ParentID];
-            }*/
-        }
-
-        reset($this->Content);
-        if(CONFIG_COLLECTIONS_ENABLE_USER_DEFINED_FIELDS)
-        {
-            static $fieldsPrep = NULL;
-            if(!isset($fieldsPrep))
-            {
-                $query = "SELECT tblCollections_UserFields.* FROM tblCollections_UserFields JOIN tblCollections_Content ON tblCollections_Content.ID = tblCollections_UserFields.ContentID WHERE tblCollections_Content.CollectionID = ?$rootcontentidquery";
-                $fieldsPrep = $_ARCHON->mdb2->prepare($query, array_merge(array('integer'), $rootcontentidtypes), MDB2_PREPARE_RESULT);
-            }
-            $result = $fieldsPrep->execute(array_merge(array($this->ID), $rootcontentidvars));
-            if(PEAR::isError($result))
-            {
-                trigger_error($result->getMessage(), E_USER_ERROR);
-            }
-
+            $query = "SELECT tblCollections_UserFields.* FROM tblCollections_UserFields WHERE tblCollections_UserFields.ContentID = " . $objContent->ID;
+            $result = $_ARCHON->mdb2->query($query);
             if($result->numRows())
             {
                 $arrEADElements = $_ARCHON->getAllEADElements();
@@ -964,14 +911,14 @@ abstract class Collections_Collection
                     {
                         $objUserField = New UserField($row);
                         $objUserField->EADElement = $arrEADElements[$row['EADElementID']];
-
                         $this->Content[$row['ContentID']]->UserFields[$row['ID']] = $objUserField;
                     }
                 }
             }
             $result->free();
+            }
+            
         }
-
         return true;
     }
    /**
