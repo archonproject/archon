@@ -218,7 +218,7 @@ function Removefield($item,$key){
 	}
 	if (empty($item->Identifier))
 	{
-		$item->Identifier = $item->AccessionDate.': ' .$item->Title;
+		$item->Identifier = $item->AccessionDate.'_' . preg_replace('/\s+/', '_', substr($item->Title,0, 30));
 	}
 	$item->Enabled = strval($item->Enabled);
 	$item->ReceivedExtentUnitID = strval($item->ReceivedExtentUnitID);
