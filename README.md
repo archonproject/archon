@@ -4,7 +4,7 @@ Installation Requirements
 
 Archon is a content management system for archival information.
 
-Version 3.21 r-1 is the last version of archon and includes code that allows for migration to ArchivesSpace: http://archivesspace.org
+Version 3.21 r-2 is the last version of archon and includes code that allows for migration to ArchivesSpace: http://archivesspace.org
 
 The interface for accessing and editing descriptive records uses a standard web browser, with JavaScript enabled. It has been tested with Firefox 3, Safari, and Opera 8 and higher, on PC, Mac and Linux desktops. The public interface will work in the Internet Explorer 7 or Higher, but the staff interface will not work in Internet Explorer.
 
