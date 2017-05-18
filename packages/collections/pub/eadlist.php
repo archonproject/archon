@@ -36,7 +36,7 @@ while ($row = $result->fetchRow())
                {
                   ?>
          <a href='?p=collections/ead&amp;id=<?php echo($objCollection['ID']); ?>&amp;templateset=ead&amp;disabletheme=1&amp;output=<?php echo(encode(formatFileName($objCollection['SortTitle']),ENCODE_HTML)); ?>'><?php echo(encode(trim($objCollection['Title']),ENCODE_HTML)); ?></a><br/>
-                  <?
+                  <?php
                }
             }
             else
