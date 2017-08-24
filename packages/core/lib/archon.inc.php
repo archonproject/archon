@@ -2682,8 +2682,16 @@ abstract class Core_Archon
             continue;
          }
 
-         //$result = call_user_func(array($MixinClass, initialize));
-         eval("\$result = {$MixinClass}::initialize();");
+         // This may not be quite correct, but is working for current usage of this code.
+         // See the mixin technique in archonobject.inc.php for an alternative.
+         $myMixinClass = "___{$MixinClass}___";
+         if (!class_exists($myMixinClass)) {
+            eval("class $myMixinClass extends $MixinClass {}");
+         }
+         $mixin = new $myMixinClass;
+         $closure = (new ReflectionMethod($myMixinClass, 'initialize'))->getClosure($mixin);
+         $result = call_user_func($closure->bindTo($this));
+
       }
    }
    
