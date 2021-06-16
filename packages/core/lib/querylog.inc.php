@@ -5,7 +5,7 @@ abstract class Core_QueryLog
     {
         $this->QueryCount++;
 
-        if($OutputQueries)
+        if($this->OutputQueries)
         {
             echo("\n\n$Message\n\n");
         }

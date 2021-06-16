@@ -2685,8 +2685,8 @@ abstract class Core_Archon
             continue;
          }
 
-         //$result = call_user_func(array($MixinClass, initialize));
-         eval("\$result = {$MixinClass}::initialize();");
+         $closure = $this->__getMixinClosure($MixinClass, 'initialize');
+
       }
    }
    
