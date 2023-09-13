@@ -10,20 +10,14 @@ abstract class ArchonObject
       $args = func_get_args();
       $MixinClass = prev($methodInfo->Classes);
 
-      $arrStrArgs = array();
-
-      for($i = 0; $i < count($args); $i++)
-      {
-         $arrStrArgs[] = "\$args[{$i}]";
-      }
-
       // Simulate mixing after.
       if($_ARCHON->Mixins[get_class($this)]->Methods[$method]->Parameters[$MixinClass]->MixOrder == MIX_AFTER)
       {
          $prevresult = call_user_func_array(array($this, 'callOverridden'), $args);
       }
 
-      eval("\$result = {$MixinClass}::{$method}(" . implode(',', $arrStrArgs) . ");");
+      $closure = $this->__getMixinClosure($MixinClass, $method);
+      $result = call_user_func_array($closure->bindTo($this), $args);
 
       // Simulate mixing before.
       if($_ARCHON->Mixins[get_class($this)]->Methods[$method]->Parameters[$MixinClass]->MixOrder == MIX_BEFORE)
@@ -235,21 +229,14 @@ abstract class ArchonObject
          $_ARCHON->Callstack[] = $stackmember;
          $MixinClass = end(end($_ARCHON->Callstack)->Classes);
 
-         $arrStrArgs = array();
-
-         for($i = 0; $i < count($args); $i++)
-         {
-            $arrStrArgs[] = "\$args[{$i}]";
-         }
-
          // Simulate mixing after.
          if($_ARCHON->Mixins[get_class($this)]->Methods[$method]->Parameters[$MixinClass]->MixOrder == MIX_AFTER)
          {
             $prevresult = call_user_func_array(array($this, 'callOverridden'), $args);
          }
 
-         eval("\$result = {$MixinClass}::{$method}(" . implode(',', $arrStrArgs) . ");");
-         //$result = call_user_func_array(array(($MixinClass) $this, $method), $args);
+         $closure = $this->__getMixinClosure($MixinClass, $method);
+         $result = call_user_func_array($closure->bindTo($this), $args);
 
          // Simulate mixing before.
          if($_ARCHON->Mixins[get_class($this)]->Methods[$method]->Parameters[$MixinClass]->MixOrder == MIX_BEFORE)
@@ -308,5 +295,21 @@ abstract class ArchonObject
          return get_class($this);
       }
    }
+
+
+   private function __getMixinClosure($MixinClass, $mixinMethod) {
+      $method = new ReflectionMethod($MixinClass, $mixinMethod);
+      $start = $method->getStartLine() - 1;
+      $length = $method->getEndLine() - $start;
+
+      $source = file($method->getFileName());
+      $method_body = implode("", array_slice($source, $start, $length));
+      $method_body = preg_replace("/$mixinMethod/", "", $method_body, 1);
+      $method_body = preg_replace("/public/", "", $method_body, 1);
+      eval('$closure = '.$method_body.';');
+
+      return $closure;
+   }
+
 }
 ?>
