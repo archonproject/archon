@@ -37,6 +37,9 @@ if(!$_ARCHON->Error)
 	<th>Shelf</th>
 	<th>Extent</th>
 	<th class='minimize-info'>Location ID</th>
+	<th>Split content count</th>
+	<th>Content first</th>
+	<th>Content second</th>
   	</tr>");
 
 	 foreach($Characters as $Char) {  
@@ -125,7 +128,20 @@ if(!$_ARCHON->Error)
 					echo("<td class='minimize-info'>");
 					echo($objLocationEntry->getString('ID'));
 					echo("</td>");
+					//split content value on dashes
+					$objLocContentStr=$objLocationEntry->getString('Content');
+					$objLocContentArray=explode("-",$objLocContentStr);
+					echo("<td>");
+					echo(count($objLocContentArray));
+					echo("</td>");
+					echo("<td>");
+					echo($objLocContentArray[0]);
+					echo("</td>");
+					echo("<td>");
+					echo($objLocContentArray[1]);
+					echo("</td>");
 					echo("</tr>\n");
+					unset($objLocContentStr,$objLocContentArray);
 				}
 			} else {
 					echo("<tr>");

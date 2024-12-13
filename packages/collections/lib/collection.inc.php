@@ -397,7 +397,7 @@ abstract class Collections_Collection
             if($row['Title'])
             {
                $title = $row['Title'];
-               if($_ARCHON->db->ServerType == 'MSSQL')
+               if($_ARCHON->db->ServerType == 'MSSQL' AND !$_ARCHON->config->DatabaseEncodingUTF8)
                {
                   $title = encoding_convert_encoding($title, 'UTF-8', 'ISO-8859-1');
                }
@@ -448,7 +448,7 @@ abstract class Collections_Collection
             $this->Content[$row['ID']]['String'] = $string;
 
             $description = $row['Description'];
-            if($_ARCHON->db->ServerType == 'MSSQL')
+            if($_ARCHON->db->ServerType == 'MSSQL' AND !$_ARCHON->config->DatabaseEncodingUTF8)
             {
                $description = encoding_convert_encoding($description, 'UTF-8', 'ISO-8859-1');
             }
@@ -466,7 +466,7 @@ abstract class Collections_Collection
             if($row['Title'])
             {
                $title = $row['Title'];
-               if($_ARCHON->db->ServerType == 'MSSQL')
+               if($_ARCHON->db->ServerType == 'MSSQL' AND !$_ARCHON->config->DatabaseEncodingUTF8)
                {
                   $title = encoding_convert_encoding($title, 'UTF-8', 'ISO-8859-1');
                }
@@ -479,7 +479,7 @@ abstract class Collections_Collection
             if($row['PrivateTitle'])
             {
                $privatetitle = $row['PrivateTitle'];
-               if($_ARCHON->db->ServerType == 'MSSQL')
+               if($_ARCHON->db->ServerType == 'MSSQL' AND !$_ARCHON->config->DatabaseEncodingUTF8)
                {
                   $privatetitle = encoding_convert_encoding($privatetitle, 'UTF-8', 'ISO-8859-1');
                }
@@ -491,7 +491,7 @@ abstract class Collections_Collection
             }
 
             $description = $row['Description'];
-            if($_ARCHON->db->ServerType == 'MSSQL')
+            if($_ARCHON->db->ServerType == 'MSSQL' AND !$_ARCHON->config->DatabaseEncodingUTF8)
             {
                $description = encoding_convert_encoding($description, 'UTF-8', 'ISO-8859-1');
             }
@@ -558,7 +558,7 @@ abstract class Collections_Collection
 
                      $String = $row['Title'] . ': ';
                      $String .= $row['Value'];
-                     if($_ARCHON->db->ServerType == 'MSSQL')
+                     if($_ARCHON->db->ServerType == 'MSSQL' AND !$_ARCHON->config->DatabaseEncodingUTF8)
                      {
                         $String = encoding_convert_encoding($String, 'UTF-8', 'ISO-8859-1');
                      }
@@ -583,7 +583,7 @@ abstract class Collections_Collection
                      $value = $row['Value'];
                      $titleloc = $arrEADElements[$row['EADElementID']]->TitleLocation;
                      $linebreaktag = $arrEADElements[$row['EADElementID']]->LineBreakTag;
-                     if($_ARCHON->db->ServerType == 'MSSQL')
+                     if($_ARCHON->db->ServerType == 'MSSQL' AND !$_ARCHON->config->DatabaseEncodingUTF8)
                      {
                         $String = encoding_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
                      }

@@ -245,7 +245,61 @@ if(!empty($objCollection->Languages))
    }
 } */
 
-            if (!empty($objCollection->BiogHist) || !empty($objCollection->UseRestrictions) || !empty($objCollection->PhysicalAccess) || !empty($objCollection->TechnicalAccess) || !empty($objCollection->PhysicalAccessNote) || !empty($objCollection->TechnicalAccessNote) || !empty($objCollection->AcquisitionSource) and $_ARCHON->Security->userHasAdministrativeAccess() || !empty($objCollection->AcquisitionMethod) || !empty($objCollection->AppraisalInformation) || !empty($objCollection->OrigCopiesNote) || !empty($objCollection->OrigCopiesURL) || !empty($objCollection->RelatedMaterials) || !empty($objCollection->RelatedMaterialsURL) || !empty($objCollection->RelatedPublications) || !empty($objCollection->PreferredCitation) || !empty($objCollection->ProcessingInfo) || !empty($objCollection->RevisionHistory))
+//changed to add related info section
+if(!empty($objCollection->OrigCopiesNote) || !empty($objCollection->OrigCopiesURL) || !empty($objCollection->RelatedMaterials) || !empty($objCollection->RelatedMaterialsURL) || !empty($objCollection->RelatedPublications)) {
+   ?>
+   
+   <div class='ccardcontent'><span class='ccardlabel'><a href='#' onclick="toggleDisplay('relatedinformation'); return false;"><img id='relatedinformationImage' src='<?php echo($_ARCHON->PublicInterface->ImagePath); ?>/plus.gif' alt='expand icon' /> Additional sources</a></span><br/>
+               <div class='ccardshowlist' style='display:none' id='relatedinformationResults'>
+   <?php
+               if($objCollection->OrigCopiesNote || $objCollection->OrigCopiesURL)
+                  {
+                     ?>
+                     <div class='ccardcontent'><span class='ccardlabel'>Other Formats:</span>
+                     <?php
+                     if($objCollection->OrigCopiesNote)
+                     {
+                        echo($objCollection->getString('OrigCopiesNote'));
+                     }
+                     if($objCollection->OrigCopiesURL)
+                     {
+                        echo("<br/>For more information please see <a href='{$objCollection->getString('OrigCopiesURL')}'>{$objCollection->getString('OrigCopiesURL')}</a>.");
+                     }
+                     ?>
+                     </div>
+                        <?php
+                     }
+   
+                     if($objCollection->RelatedMaterials || $objCollection->RelatedMaterialsURL)
+                     {
+                        ?>
+                     <div class='ccardcontent'><span class='ccardlabel'>Related Materials:</span>
+                     <?php
+                     if($objCollection->RelatedMaterials)
+                     {
+                        echo($objCollection->getString('RelatedMaterials'));
+                     }
+                     if($objCollection->RelatedMaterialsURL)
+                     {
+                        echo("<br/>For more information please see <a href='{$objCollection->getString('RelatedMaterialsURL')}'>{$objCollection->getString('RelatedMaterialsURL')}</a>.");
+                     }
+                     ?>
+                     </div>
+                        <?php
+                     }
+   
+   
+                     if($objCollection->RelatedPublications)
+                     {
+                        ?>
+                     <div class='ccardcontent'><span class='ccardlabel'>Related Publications:</span> <?php echo($objCollection->getString('RelatedPublications')); ?></div>
+                     <?php
+                  }
+      echo("</div>");  
+      echo("</div>");// ending relatedinfo content
+}
+
+            if (!empty($objCollection->BiogHist) || !empty($objCollection->UseRestrictions) || !empty($objCollection->PhysicalAccess) || !empty($objCollection->TechnicalAccess) || !empty($objCollection->PhysicalAccessNote) || !empty($objCollection->TechnicalAccessNote) || !empty($objCollection->AcquisitionSource) and $_ARCHON->Security->userHasAdministrativeAccess() || !empty($objCollection->AcquisitionMethod) || !empty($objCollection->AppraisalInformation) || !empty($objCollection->PreferredCitation) || !empty($objCollection->ProcessingInfo) || !empty($objCollection->RevisionHistory))
 //admin info exists
 
             {
@@ -322,49 +376,7 @@ if(!empty($objCollection->Languages))
                      <?php
                   }
 
-   if($objCollection->OrigCopiesNote || $objCollection->OrigCopiesURL)
-               {
-                  ?>
-            <div class='ccardcontent'><span class='ccardlabel'>Other Formats:</span>      
-                  <?php
-                  if($objCollection->OrigCopiesNote)
-                  {
-         echo($objCollection->OrigCopiesNote);
-                     }
-                     if($objCollection->OrigCopiesURL)
-                     {
-                        echo("<br/>For more information please see <a href='$objCollection->OrigCopiesURL'>$objCollection->OrigCopiesURL</a>.");
-                     }
-                     ?>
-            </div>
-                     <?php
-                  }
-
-   if($objCollection->RelatedMaterials || $objCollection->RelatedMaterialsURL)
-               {
-                  ?>
-            <div class='ccardcontent'><span class='ccardlabel'>Related Materials:</span>      
-                  <?php
-                  if($objCollection->RelatedMaterials)
-                  {
-                     echo($objCollection->RelatedMaterials);
-      }
-                  if($objCollection->RelatedMaterialsURL)
-                  {
-                     echo("<br/>For more information please see <a href='$objCollection->RelatedMaterialsURL'>$objCollection->RelatedMaterialsURL</a>.");
-                  }
-                  ?>
-            </div>
-                  <?php
-   }
-
-
-               if($objCollection->RelatedPublications)
-               {
-                  ?>
-            <div class='ccardcontent'><span class='ccardlabel'>Related Publications:</span> <?php echo($objCollection->RelatedPublications); ?></div>
-                  <?php
-   }
+   
 
 
                if($objCollection->PreferredCitation)

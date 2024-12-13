@@ -12,8 +12,12 @@ class FindingAidCache extends AObject
          return '';
       }
 
-      $query = "SELECT Dirty,FindingAidText FROM tblCollections_FindingAidCache WHERE CollectionID = $CollectionID AND TemplateSet = '$TemplateSet' AND ReadPermissions = " . intval($ReadPermissions) . " AND RootContentID = $RootContentID";
-      $result = $_ARCHON->mdb2->query($query);
+      $query = "SELECT TOP 1 Dirty,FindingAidText FROM tblCollections_FindingAidCache WHERE CollectionID = ? AND TemplateSet = ? AND ReadPermissions = ? AND RootContentID = ? ORDER BY id desc";
+
+
+      $prep = $_ARCHON->mdb2->prepare($query, array('integer', 'text', 'integer', 'integer'), MDB2_PREPARE_RESULT);
+
+      $result = $prep->execute(array($CollectionID, $TemplateSet, $ReadPermissions, $RootContentID));
       if(pear_isError($result))
       {
          echo($query);
@@ -42,8 +46,12 @@ class FindingAidCache extends AObject
          return false;
       }
 
-      $query = "SELECT ID FROM tblCollections_FindingAidCache WHERE CollectionID = $CollectionID AND TemplateSet = '$TemplateSet' AND ReadPermissions = " . intval($ReadPermissions) . " AND RootContentID = $RootContentID";
-      $result = $_ARCHON->mdb2->query($query);
+      $query = "SELECT ID FROM tblCollections_FindingAidCache WHERE CollectionID = ? AND TemplateSet = ? AND ReadPermissions = ? AND RootContentID = ?";
+      
+      $prep = $_ARCHON->mdb2->prepare($query, array('integer', 'text', 'integer', 'integer'), MDB2_PREPARE_RESULT);
+
+      $result = $prep->execute(array($CollectionID, $TemplateSet, $ReadPermissions, $RootContentID));
+
       if(pear_isError($result))
       {
          echo($query);

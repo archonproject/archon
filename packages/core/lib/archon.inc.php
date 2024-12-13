@@ -750,6 +750,9 @@ abstract class Core_Archon
       {
          return;
       }
+     
+      // Sanitize for XSS.
+      $Error = htmlspecialchars($Error);
 
       $this->Error = $this->Error ? "{$this->Error}; $Error" : $Error;
    }
